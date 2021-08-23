@@ -17,7 +17,7 @@
                 </div>
             </LayoutPanel>
             <LayoutPanel region="center" style="height:100%">
-                <DataGrid style="height: calc(100vh - 100px)"
+                <DataGrid style="height: calc(100vh - 102px)"
                           :border="false"
                           class="f-full"
                           :columnResizing="true"

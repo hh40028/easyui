@@ -73,14 +73,14 @@
                                         <LinkButton iconCls="icon-add" :plain="true" @click="up('photo')">上传图片</LinkButton>
                                     </Panel>
                                     <div class="w-100 p-5" v-for="file in files" :key="file.id" v-if="file.type==='photo'">
-                                        <img class="w-100" :src="$root.basePath+'/common/getImage?filename='+file.filename">
+                                        <img title="点击删除" @click="removePhoto(file)" class="w-100" :src="$root.basePath+'/common/getImage?filename='+file.filename">
                                     </div>
                                 </LayoutPanel>
                                 <LayoutPanel bodyCls="f-column" region="center" style="height:100%">
                                     <Panel class="f-full" title="文档" :bodyStyle="{padding:'10px'}" style="height:200px">
                                         <LinkButton iconCls="icon-add" :plain="true" @click="up('attachment')">上传文档</LinkButton>
                                         <a v-for="file in files" :key="file.id" v-if="file.type==='attachment'" @click="download(file.filename)">
-                                            <div class="f-16 c-blue" style="overflow: hidden; text-overflow:ellipsis; white-space: nowrap;">{{file.sourcename}}
+                                            <div class="f-14 c-blue" style="overflow: hidden; text-overflow:ellipsis; white-space: nowrap;">{{ file.sourcename }}
                                             </div>
                                         </a>
                                     </Panel>
@@ -202,7 +202,7 @@ export default {
             filterString: '',
             timeout: null,
             dicts: [],
-            files:[]
+            files: []
         }
     },
     created: function () {
@@ -323,19 +323,26 @@ export default {
             });
         },
         up(type) {
-            this.type=type;
+            this.type = type;
             $("#file").val("");
             $("#file").click();
         },
-        download(filename){
+        download(filename) {
             let vm = this;
-            this.getData("common/downloadFile", {filename:filename}, function (data) {
-
+            this.getData("common/downloadFile", {filename: filename}, function (data) {
             })
         },
-        view(){
-            sessionStorage.equipmentObj=JSON.stringify(this.equipment);
+        view() {
+            sessionStorage.equipmentObj = JSON.stringify(this.equipment);
             this.$router.push('equipmentView');
+        },
+        removePhoto(obj) {
+            let vm = this;
+            this.confirm('删除此照片确认吗?', function () {
+                vm.getData("attachment/delete", {id: obj.id}, function (data) {
+                    vm.loadFiles(vm.equipment.id);
+                })
+            })
         }
     },
     watch: {

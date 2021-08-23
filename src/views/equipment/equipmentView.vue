@@ -59,7 +59,7 @@
                                     </tr>
                                 </table>
                                 <div class="m-t-20">
-                                    <div style="float: left" v-for="file in files" :key="file.id" class="p-5">
+                                    <div style="float: left" v-for="file in files" :key="file.id" v-show="file.type==='photo'" class="p-5">
                                         <img style="height: 300px" :src="$root.basePath+'/common/getImage?filename='+file.filename">
                                     </div>
                                 </div>
