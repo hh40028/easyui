@@ -77,7 +77,6 @@ export default {
             })
         },
         selectItem(obj){
-            this.username=obj.username;
             this.$emit('selectUser',obj);
             this.$refs.selectUserDlg.close();
         },

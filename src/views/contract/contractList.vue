@@ -3,7 +3,7 @@
         <Layout bodyCls="f-column" style="height:calc(100vh - 50px);" :border="false">
             <LayoutPanel region="north" style="height:50px;">
                 <div class="col-3 p-5">
-                    <LinkButton iconCls="icon-add" :plain="true" @click="add">开单</LinkButton>
+                    <LinkButton iconCls="icon-add" :plain="true" @click="add">新建</LinkButton>
                     <LinkButton iconCls="icon-ok" class="m-r-5" :disabled="!obj.id" :plain="true" @click="view">查看</LinkButton>
                 </div>
                 <div class="col-3 p-5 text-center">

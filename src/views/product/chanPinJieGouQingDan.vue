@@ -47,20 +47,20 @@
             </LayoutPanel>
         </Layout>
 
+        <selectCommodity ref="selectCommodityCom" :single="true" @selectCommodity="selectCommodity"></selectCommodity>
 
-        <Dialog ref="dlg" bodyCls="f-column" title="选择商品" :modal="true" closed :dialogStyle="{height:'60vh',width:'60%'}">
-            <div class="f-full" style="overflow:auto">
-                <selectCommodity ref="selectCommodity" @selectCommodity="selectCommodity"></selectCommodity>
-            </div>
-        </Dialog>
+<!--        <Dialog ref="dlg" bodyCls="f-column" title="选择商品" :modal="true" closed :dialogStyle="{height:'60vh',width:'60%'}">-->
+<!--            <div class="f-full" style="overflow:auto">-->
+<!--            </div>-->
+<!--        </Dialog>-->
 
-        <Dialog ref="dlgSelectChildCommodity" bodyCls="f-column" title="选择商品" :modal="true" closed :dialogStyle="{height:'60vh',width:'60%'}">
-            <div class="f-full" style="overflow:auto">
-                <selectCommodity ref="selectChildCommodity" @selectCommodity="selectChildCommodity"></selectCommodity>
-            </div>
-        </Dialog>
+<!--        <Dialog ref="dlgSelectChildCommodity" bodyCls="f-column" title="选择商品" :modal="true" closed :dialogStyle="{height:'60vh',width:'60%'}">-->
+<!--            <div class="f-full" style="overflow:auto">-->
+<!--            </div>-->
+<!--        </Dialog>-->
 
-        <Dialog ref="dlgEdit" bodyCls="f-column" title="编辑" :modal="true" closed :dialogStyle="{height:'60vh',width:'60%'}">
+        <selectCommodity ref="selectChildCommodity" @selectCommodity="selectChildCommodity"></selectCommodity>
+        <Dialog ref="dlgEdit" bodyCls="f-column" title="编辑" :modal="true" closed :dialogStyle="{height:'80vh',width:'80%'}">
             <div class="f-full" style="overflow:auto">
                 <Layout bodyCls="f-column">
                     <LayoutPanel region="north" style="height:40px;">
@@ -76,11 +76,11 @@
                         <DataGrid :columnResizing="true"
                                   class="f-full"
                                   :data="children" @editEnd="editEnd($event)"
+                                  :selectionMode="'single'"
                                   @selectionChange="selectCurrRow($event)"
                                   :clickToEdit="true" editMode="cell"
                                   :striped="true" :border="false"
-                                  idField="id"
-                                  :selectionMode="'single'">
+                                  idField="id">
                             <GridColumn field="number" title="商品编号" align="center"></GridColumn>
                             <GridColumn field="name" title="商品名称" align="center"></GridColumn>
                             <GridColumn field="norm" title="商品规格" align="center"></GridColumn>
@@ -139,14 +139,13 @@ export default {
                     }
                     vm.list.push(e);
                 })
-                console.log(data);
             });
         },
         add() {
-            this.$refs.dlg.open();
+            this.$refs.selectCommodityCom.load();
+            this.children=[];
         },
         selectCommodity(obj) {
-            this.$refs.dlg.close();
             let newObj = {
                 pid: 0,
                 commodityid: obj.id
@@ -154,6 +153,7 @@ export default {
             let vm = this;
             this.getData("productstructure/saveNew", newObj, function (data) {
                 vm.$refs.dlgEdit.open();
+                vm.load();
                 vm.loadTree(data.id);
             })
         },
@@ -176,10 +176,9 @@ export default {
             this.loadChildren(this.node.id);
         },
         selectChildCommodityOpen() {
-            this.$refs.dlgSelectChildCommodity.open();
+            this.$refs.selectChildCommodity.load();
         },
         selectChildCommodity(obj) {
-            this.$refs.dlgSelectChildCommodity.close();
             obj.commodityid = obj.id;
             obj.pid = this.node.id;
             obj.id = 0;
@@ -188,6 +187,7 @@ export default {
             this.getData("productstructure/save", obj, function (data) {
                 vm.loadChildren(vm.node.id);
                 vm.loadTree(vm.selectCommodityObj.id);
+                vm.load();
             })
         },
         selectObj(obj) {

@@ -50,6 +50,7 @@ export default {
                 data.children.forEach(function (e) {
                     vm.list.push(e);
                 })
+                console.log(vm.list);
 
             })
         },

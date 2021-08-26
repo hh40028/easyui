@@ -19,6 +19,11 @@ import orgSet from '../views/system/orgSet.vue'
 import userSet from '../views/system/userSet.vue'
 import equipmentList from '../views/equipment/equipmentList.vue'
 import equipmentView from '../views/equipment/equipmentView.vue'
+import directstorage from '../views/stock/directstorage.vue'
+import userRoleSet from '../views/system/userRoleSet.vue'
+import worksequenceList from '../views/product/worksequence/worksequenceList.vue'
+import accountingsubjects from '../views/finance/accountingsubjects.vue'
+import designManagement from '../views/product/designManagement.vue'
 
 Vue.use(VueRouter)
 
@@ -43,6 +48,11 @@ const routes = [
   {path: '/userSet', name: 'userSet', component: userSet},
   {path: '/equipmentList', name: 'equipmentList', component: equipmentList},
   {path: '/equipmentView', name: 'equipmentView', component: equipmentView},
+  {path: '/directstorage', name: 'directstorage', component: directstorage},
+  {path: '/userRoleSet', name: 'userRoleSet', component: userRoleSet},
+  {path: '/worksequenceList', name: 'worksequenceList', component: worksequenceList},
+  {path: '/accountingsubjects', name: 'accountingsubjects', component: accountingsubjects},
+  {path: '/designManagement', name: 'designManagement', component: designManagement},
 ]
 
 const router = new VueRouter({

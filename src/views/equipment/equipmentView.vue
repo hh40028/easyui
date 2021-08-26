@@ -104,15 +104,4 @@ export default {
 </script>
 
 <style scoped>
-table {
-    border-collapse: collapse;
-}
-
-td {
-    padding: 5px;
-    /*border-top: 0;*/
-    /*border-right: 1px solid #ddd;*/
-    /*border-bottom: 1px solid #ddd;*/
-    /*border-left: 0;*/
-}
 </style>

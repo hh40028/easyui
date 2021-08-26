@@ -75,7 +75,7 @@
             <div class="f-full">
                 <div class="col-12 p-15">
                     <label>货位编码</label>
-                    <input type="text" v-model="cargolocation.number" class="form-control">
+                    <input type="text" v-model="selectCargolocationObj.number" class="form-control">
                 </div>
             </div>
             <div class="dialog-button">
@@ -137,6 +137,7 @@ export default {
             this.warehouse = this.clone(obj);
             let vm = this;
             this.getData("cargolocation/getTreeNotWarehouse", {warehouseId: this.warehouse.id}, function (data) {
+                console.log(data);
                 vm.cargolocations =[{id:vm.warehouse.id,text:vm.warehouse.name,children:data,isWarehouse:true}];
             })
         },
@@ -188,8 +189,7 @@ export default {
         },
         saveCargolocation(){
             let vm = this;
-            this.cargolocation.name=this.cargolocation.number;
-            this.getData("cargolocation/save", this.cargolocation, function (data) {
+            this.getData("cargolocation/updateNumber", {id:this.selectCargolocationObj.id,number:this.selectCargolocationObj.number}, function (data) {
                 vm.$refs.editCargolocationDlg.close();
                 vm.selectObj(vm.warehouse);
             })

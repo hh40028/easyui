@@ -36,7 +36,6 @@ export default {
             this.loadList();
         },
         selectItem(obj) {
-            this.name = obj.name;
             this.$emit('selectOrganization', obj);
             this.$refs.selectOrganizationDlg.close();
         },
