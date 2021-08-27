@@ -22,6 +22,7 @@
                       selectionMode="single"
                       :data="tree" @selectionChange="selectObj($event)"
                       idField="id" treeField="name">
+                <GridColumn field="id" title="主键" width="100"></GridColumn>
                 <GridColumn field="name" title="名称" width="200"></GridColumn>
                 <GridColumn field="number" title="编号" align="left" width="130"></GridColumn>
                 <GridColumn field="direction" title="余额方向" align="center" width="120">

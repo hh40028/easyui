@@ -24,6 +24,8 @@ import userRoleSet from '../views/system/userRoleSet.vue'
 import worksequenceList from '../views/product/worksequence/worksequenceList.vue'
 import accountingsubjects from '../views/finance/accountingsubjects.vue'
 import designManagement from '../views/product/designManagement.vue'
+import customerBegin from '../views/customerSupplier/customerBegin.vue'
+import supplierBegin from '../views/customerSupplier/supplierBegin.vue'
 
 Vue.use(VueRouter)
 
@@ -53,6 +55,8 @@ const routes = [
   {path: '/worksequenceList', name: 'worksequenceList', component: worksequenceList},
   {path: '/accountingsubjects', name: 'accountingsubjects', component: accountingsubjects},
   {path: '/designManagement', name: 'designManagement', component: designManagement},
+  {path: '/customerBegin', name: 'customerBegin', component: customerBegin},
+  {path: '/supplierBegin', name: 'supplierBegin', component: supplierBegin},
 ]
 
 const router = new VueRouter({

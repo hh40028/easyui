@@ -73,7 +73,6 @@ export default {
             })
         },
         selectItem(obj){
-            this.customername=obj.name;
             this.$emit('selectCustomer',obj);
             this.$refs.selectCustomerDlg.close();
         },

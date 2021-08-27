@@ -73,7 +73,6 @@ export default {
             })
         },
         selectItem(obj){
-            this.suppliername=obj.name;
             this.$emit('selectSupplier',obj);
             this.$refs.selectSupplierDlg.close();
         },
