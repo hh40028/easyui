@@ -1,17 +1,16 @@
 <template>
     <div>
         <input v-if="input" type="text" readonly v-model="name" class="form-control" @click="open">
-        <Dialog ref="selectWarehouseDlg" closed
-                :title="'选择仓库'"
+        <Dialog ref="selectAccountDlg" closed
+                :title="'选择账户'"
                 :dialogStyle="{width:'30%',height:'400px'}"
                 :modal="true">
             <DataGrid class="f-full"
                       selectionMode="single"
-                      :data="warehouses"
+                      :data="accounts"
                       @selectionChange="selectRow($event)"
                       style="width:100%;height:100%">
-                <GridColumn field="name" title="仓库名称"></GridColumn>
-                <GridColumn field="managername" title="负责人"></GridColumn>
+                <GridColumn field="name" title="名称"></GridColumn>
             </DataGrid>
         </Dialog>
     </div>
@@ -21,12 +20,13 @@
 export default {
     props: {
         input: Boolean,
-        name: String
+        name: String,
+        number:String
     },
     name: "app",
     data() {
         return {
-            warehouses: []
+            accounts: []
         }
     },
     created: function () {
@@ -35,25 +35,19 @@ export default {
     methods: {
         load: function () {
             let vm = this;
-            this.$root.getData("warehouse/getList", {}, function (data) {
-                vm.warehouses = [];
-                data.forEach(function (e) {
-                    if (e.checking) {
-                        e.checking = "盘点中...";
-                    }
-                    vm.warehouses.push(e);
-                })
+            this.$root.getData("accountingsubjects/getChildList", {number:this.number}, function (data) {
+                vm.accounts = data;
             })
         },
         open() {
-            this.$refs.selectWarehouseDlg.open();
-            if (!this.warehouses.length) {
+            this.$refs.selectAccountDlg.open();
+            if (!this.accounts.length) {
                 this.load();
             }
         },
         selectRow(obj) {
-            this.$refs.selectWarehouseDlg.close();
-            this.$emit('selectWarehouse', obj);
+            this.$refs.selectAccountDlg.close();
+            this.$emit('selectAccount', obj);
         }
     }
 }

@@ -26,6 +26,8 @@ import accountingsubjects from '../views/finance/accountingsubjects.vue'
 import designManagement from '../views/product/designManagement.vue'
 import customerBegin from '../views/customerSupplier/customerBegin.vue'
 import supplierBegin from '../views/customerSupplier/supplierBegin.vue'
+import receiptOrder from '../views/finance/receiptOrder.vue'
+import paymentOrder from '../views/finance/paymentOrder.vue'
 
 Vue.use(VueRouter)
 
@@ -57,6 +59,8 @@ const routes = [
   {path: '/designManagement', name: 'designManagement', component: designManagement},
   {path: '/customerBegin', name: 'customerBegin', component: customerBegin},
   {path: '/supplierBegin', name: 'supplierBegin', component: supplierBegin},
+  {path: '/receiptOrder', name: 'receiptOrder', component: receiptOrder},
+  {path: '/paymentOrder', name: 'paymentOrder', component: paymentOrder},
 ]
 
 const router = new VueRouter({
