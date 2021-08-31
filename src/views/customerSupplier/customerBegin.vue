@@ -47,7 +47,7 @@
                 <GridColumn field="receivables" title="应收金额" align="center">
                     <template slot="body" slot-scope="scope">
                         <div class="item">
-                            {{ scope.row.receivables |number2 }}
+                            {{ toMoney(scope.row.receivables,'￥') }}
                         </div>
                     </template>
                 </GridColumn>

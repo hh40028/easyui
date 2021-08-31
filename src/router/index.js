@@ -28,6 +28,7 @@ import customerBegin from '../views/customerSupplier/customerBegin.vue'
 import supplierBegin from '../views/customerSupplier/supplierBegin.vue'
 import receiptOrder from '../views/finance/receiptOrder.vue'
 import paymentOrder from '../views/finance/paymentOrder.vue'
+import recePayStatistics from '../views/finance/recePayStatistics.vue'
 
 Vue.use(VueRouter)
 
@@ -61,6 +62,7 @@ const routes = [
   {path: '/supplierBegin', name: 'supplierBegin', component: supplierBegin},
   {path: '/receiptOrder', name: 'receiptOrder', component: receiptOrder},
   {path: '/paymentOrder', name: 'paymentOrder', component: paymentOrder},
+  {path: '/recePayStatistics', name: 'recePayStatistics', component: recePayStatistics},
 ]
 
 const router = new VueRouter({

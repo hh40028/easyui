@@ -51,7 +51,13 @@
                             <GridColumn field="customername" title="客户" width="180" align="center"></GridColumn>
                             <GridColumn field="contractno" title="合同编号" width="180" align="center"></GridColumn>
                             <GridColumn field="saleorderdate" title="订货日期" width="120" align="center"></GridColumn>
-                            <GridColumn field="total" title="订货金额" width="120" align="center"></GridColumn>
+                            <GridColumn field="total" title="订货金额" width="120" align="right">
+                                <template slot="body" slot-scope="scope">
+                                    <div class="item">
+                                        {{ toMoney(scope.row.total,'￥') }}
+                                    </div>
+                                </template>
+                            </GridColumn>
                             <GridColumn field="enddate" title="交付日期" width="100" align="center"></GridColumn>
                             <GridColumn field="username" title="录入人" width="100" align="center"></GridColumn>
                             <GridColumn field="remark" title="摘要" width="280" align="left"></GridColumn>

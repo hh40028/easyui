@@ -1,13 +1,18 @@
 <template>
     <Layout bodyCls="f-column" style="height:calc(100vh - 50px);">
         <LayoutPanel region="north" style="height:50px;">
-            <Panel :bodyStyle="{padding:'5px'}" :border="false">
-                <LinkButton iconCls="icon-add" :plain="true" @click="add">新增</LinkButton>
-                <LinkButton :disabled="!obj.id || obj.status>0" iconCls="icon-edit" :plain="true" @click="edit">编辑</LinkButton>
-                <LinkButton :disabled="obj.id && obj.status===1" iconCls="icon-edit" :plain="true" @click="openDocumentDlg">设计文档</LinkButton>
-                <LinkButton :disabled="obj.id && obj.status===1" iconCls="icon-ok" :plain="true" @click="openFinishDlg">完成</LinkButton>
-                <LinkButton :disabled="!obj.id" iconCls="icon-search" :plain="true" @click="view">查看</LinkButton>
-            </Panel>
+            <div class="col-9 p-5">
+                <Panel :bodyStyle="{padding:'5px'}" :border="false">
+                    <LinkButton iconCls="icon-add" :plain="true" @click="add">新增</LinkButton>
+                    <LinkButton :disabled="!obj.id || obj.status>0" iconCls="icon-edit" :plain="true" @click="edit">编辑</LinkButton>
+                    <LinkButton :disabled="obj.id && obj.status===1" iconCls="icon-edit" :plain="true" @click="openDocumentDlg">设计文档</LinkButton>
+                    <LinkButton :disabled="obj.id && obj.status===1" iconCls="icon-ok" :plain="true" @click="openFinishDlg">完成</LinkButton>
+                    <LinkButton :disabled="!obj.id" iconCls="icon-search" :plain="true" @click="view">查看</LinkButton>
+                </Panel>
+            </div>
+            <div class="col-3 p-5">
+                <filterList @filterLoad="filter"></filterList>
+            </div>
         </LayoutPanel>
         <LayoutPanel region="center" style="height:100%">
             <DataGrid style="height: calc(100vh - 100px)"
@@ -51,7 +56,7 @@
                     <GridHeaderRow>
                         <GridColumn field="norm" title="产品规格" width="180" align="center"></GridColumn>
                         <GridColumn field="model" title="产品型号" width="180" align="center"></GridColumn>
-                        <GridColumn field="designer" title="设计师" width="180" align="center"></GridColumn>
+                        <GridColumn field="designername" title="设计师" width="180" align="center"></GridColumn>
                         <GridColumn field="starttime" title="开始时间" width="180" align="center"></GridColumn>
                         <GridColumn field="completetime" title="完成时间" width="180" align="center"></GridColumn>
                         <GridColumn field="remark" title="说明" width="180" align="center"></GridColumn>
@@ -173,6 +178,7 @@
 import selectCommodity from "@/components/selectCommodity";
 import selectUser from "@/components/selectUser";
 import designManagementView from "@/components/designManagementView.vue";
+import filterList from "@/components/filterList.vue";
 
 export default {
     name: "app",
@@ -195,7 +201,7 @@ export default {
         this.loadPage(this.pageNumber, this.pageSize);
     },
     components: {
-        selectCommodity, selectUser,designManagementView
+        selectCommodity, selectUser, designManagementView, filterList
     },
     methods: {
         onPageChange(event) {
@@ -265,7 +271,7 @@ export default {
                     id: this.obj.id,
                     completetime: this.obj.completetime
                 }, function (data) {
-                    vm.obj={};
+                    vm.obj = {};
                     vm.$refs.editFinishDlg.close();
                     vm.loadPage(vm.pageNumber, vm.pageSize);
                 })
@@ -317,16 +323,20 @@ export default {
             $("#file").val("");
             $("#file").click();
         },
-        deleteDocument(){
+        deleteDocument() {
             let vm = this;
             this.confirm('确认吗?', function () {
-                vm.getData("attachment/delete", {id:vm.document.id}, function (data) {
+                vm.getData("attachment/delete", {id: vm.document.id}, function (data) {
                     vm.loadFiles();
                 })
             })
         },
-        view(){
+        view() {
             this.$refs.viewDesignDlg.open();
+        },
+        filter(filterString) {
+            this.filterString = filterString;
+            this.loadPage(this.pageNumber, this.pageSize);
         }
     }
 }

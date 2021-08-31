@@ -43,9 +43,10 @@
                         </div>
                     </template>
                 </GridColumn>
-                <GridColumn field="commodityprice" title="入库单价" align="center">
+                <GridColumn field="commodityprice" title="入库单价" align="right">
                     <template slot="body" slot-scope="scope">
-                        <div class="item">{{scope.row.inprice|number2}}
+                        <div class="item">
+                            {{ toMoney(scope.row.inprice, '￥') }}
                         </div>
                     </template>
                 </GridColumn>

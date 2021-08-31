@@ -13,7 +13,7 @@
                 </div>
                 <div class="col-3 p-5"></div>
                 <div class="col-3 p-5">
-                    <input type="text" class="form-control" v-model="filterString" placeholder="过滤...">
+                    <filterList @filterLoad="filter"></filterList>
                 </div>
             </LayoutPanel>
             <LayoutPanel region="center" style="height:100%">
@@ -49,12 +49,18 @@
                     </GridColumnGroup>
                     <GridColumnGroup>
                         <GridHeaderRow>
-                             <GridColumn field="suppliername" title="供应商" width="180" align="center"></GridColumn>
+                            <GridColumn field="suppliername" title="供应商" width="180" align="center"></GridColumn>
                             <GridColumn field="deptname" title="采购部门" width="180" align="center"></GridColumn>
                             <GridColumn field="purchasedate" title="采购日期" width="120" align="center"></GridColumn>
                             <GridColumn field="managername" title="经办人" width="120" align="center"></GridColumn>
                             <GridColumn field="username" title="编制人" width="120" align="center"></GridColumn>
-                            <GridColumn field="amount" title="采购金额" width="100" align="right"></GridColumn>
+                            <GridColumn field="amount" title="采购金额" width="100" align="right">
+                                <template slot="body" slot-scope="scope">
+                                    <div class="item">
+                                        {{ toMoney(scope.row.amount, '￥') }}
+                                    </div>
+                                </template>
+                            </GridColumn>
                             <GridColumn field="remark" title="摘要" width="280" align="left"></GridColumn>
                         </GridHeaderRow>
                     </GridColumnGroup>
@@ -182,6 +188,7 @@ import selectCommodity from '@/components/selectCommodity.vue';
 import selectSupplier from '@/components/selectSupplier.vue';
 import purchaseView from '@/components/purchaseView.vue';
 import selectUser from '@/components/selectUser.vue';
+import filterList from '@/components/filterList.vue';
 
 export default {
     name: "app",
@@ -196,8 +203,8 @@ export default {
             list: [],
             warehouses: [],
             isRedback: false,
-            filterString:'',
-            timeout:null
+            // filterString:'',
+            timeout: null
         }
     },
     created: function () {
@@ -205,7 +212,7 @@ export default {
         this.loadPage(this.pageNumber, this.pageSize);
     },
     components: {
-        selectCommodity, selectUser, selectSupplier, purchaseView
+        selectCommodity, selectUser, selectSupplier, purchaseView, filterList
     },
     methods: {
         loadWarehouses: function () {
@@ -349,18 +356,11 @@ export default {
             }
             return null;
         },
-    },
-    watch: {
-        filterString: {
-            handler() {
-                let vm = this;
-                if (this.timeout) clearTimeout(this.timeout);
-                this.timeout = setTimeout(function () {
-                    vm.loadPage(vm.pageNumber, vm.pageSize);
-                }, 500);
-            }
+        filter(filterString){
+            this.filterString=filterString;
+            this.loadPage(this.pageNumber, this.pageSize);
         }
-    },
+    }
 }
 </script>
 

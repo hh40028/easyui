@@ -59,8 +59,8 @@ export default {
     },
     created() {
         this.loadMenu();
-        this.loadTaskCount();
-        setInterval(this.loadTaskCount, 30000);
+        this.$root.loadTaskCount();
+        setInterval(this.$root.loadTaskCount, 30000);
     },
     methods: {
         loadMenu: function () {

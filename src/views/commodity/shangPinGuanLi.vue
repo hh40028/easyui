@@ -51,6 +51,7 @@
                         <GridColumn field="bigpackage" title="大包装单位" width="120" align="center"></GridColumn>
                         <GridColumn field="conversionrelationship" title="大小包换算" width="120" align="center"></GridColumn>
                         <GridColumn field="suppliername" title="供应商" width="120" align="center"></GridColumn>
+                        <GridColumn field="sourcename" title="来源" width="120" align="center"></GridColumn>
                         <GridColumn field="remark" width="580" title="备注" align="center"></GridColumn>
                     </GridHeaderRow>
                 </GridColumnGroup>
@@ -115,6 +116,10 @@
                     <label>条码</label><br>
                     <input type="text" class="form-control" v-model="obj.barcode">
                 </div>
+                <div class="col-4 p-t-15 p-l-15 p-r-15 ">
+                    <label>来源</label><br>
+                    <ComboBox class="w-100 form-control" valueField="id" textField="name" v-model="obj.source" :data="sources"></ComboBox>
+                </div>
                 <div class="col-12 p-t-15 p-l-15 p-r-15 ">
                     <label>备注</label><br>
                     <textarea rows="5" style="height: 50px" class="form-control" v-model="obj.remark"></textarea>
@@ -144,6 +149,7 @@ export default {
             suppliers: [],
             units: [],
             types: [],
+            sources: [],
             filterString:'',
             timeout:null
         }
@@ -165,6 +171,9 @@ export default {
                     }
                     if (e.key === 'chanpinleibie') {
                         vm.types.push(e);
+                    }
+                    if (e.key === 'shangPinLeiYuan') {
+                        vm.sources.push(e);
                     }
                 })
             })

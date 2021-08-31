@@ -41,7 +41,7 @@
                 产品型号: {{ obj.model }}
             </div>
             <div class="col-12 p-10">
-                设计人员: {{ obj.designer }}
+                设计人员: {{ obj.designername }}
             </div>
             <div class="col-12 p-10">
                 开始时间: {{ obj.starttime }}

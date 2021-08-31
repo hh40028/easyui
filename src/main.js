@@ -60,6 +60,36 @@ Vue.prototype.handleErrInfo = function (obj) {
         this.alert(obj.message);
     }
 }
+Vue.prototype.toMoney = function (price, chars) {
+    chars = chars ? chars.toString() : '￥';
+    if (!price) {
+        return chars + '0.00';
+    }
+    if (price > 0) {
+        var priceString = price.toString();
+        var priceInt = parseInt(price);
+        var len = priceInt.toString().length;
+        var num = len / 3;
+        var remainder = len % 3;
+        var priceStr = '';
+        for (var i = 1; i <= len; i++) {
+            priceStr += priceString.charAt(i - 1);
+            if (i == (remainder) && len > remainder) priceStr += ',';
+            if ((i - remainder) % 3 == 0 && i < len && i > remainder) priceStr += ',';
+        }
+        if (priceString.indexOf('.') < 0) {
+            priceStr = priceStr + '.00';
+        } else {
+            priceStr += priceString.substr(priceString.indexOf('.'));
+            if (priceString.length - priceString.indexOf('.') - 1 < 2) {
+                priceStr = priceStr + '0';
+            }
+        }
+        return chars + priceStr;
+    } else {
+        return chars + price;
+    }
+}
 //确认框
 Vue.prototype.confirm = function (msg, func) {
     $('.aui-mask').remove();
@@ -134,15 +164,6 @@ Vue.prototype.clone = function (obj) {
     return o;
 };
 
-Vue.prototype.loadTaskCount = function () {
-    let vm = this;
-    if (this.$root.userObj) {
-        this.getData("sys/getTaskCount", {}, function (data) {
-            vm.$root.taskcount = data;
-            console.log('loadTaskCount');
-        })
-    }
-};
 
 new Vue({
     data() {
@@ -163,6 +184,16 @@ new Vue({
         }
         if (sessionStorage.twomenu) {
             this.twomenu = JSON.parse(sessionStorage.twomenu);
+        }
+    },
+    methods: {
+        loadTaskCount() {
+            let vm = this;
+            if (this.userObj) {
+                this.getData("sys/getTaskCount", {}, function (data) {
+                    vm.taskcount = data;
+                })
+            }
         }
     },
     router,

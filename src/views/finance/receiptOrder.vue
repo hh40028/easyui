@@ -44,18 +44,17 @@
                 <GridColumn field="number" title="单据号" align="center"></GridColumn>
                 <GridColumn field="unitname" title="往来单位" align="center"></GridColumn>
                 <GridColumn field="receiptdate" title="收款日期" align="center"></GridColumn>
-                <GridColumn field="amount" title="收款金额" align="center">
+                <GridColumn field="amount" title="收款金额" align="right">
                     <template slot="body" slot-scope="scope">
                         <div class="item">
-                            {{ scope.row.amount |number2 }}
+                            {{ toMoney(scope.row.amount, '￥') }}
                         </div>
                     </template>
                 </GridColumn>
-                <GridColumn field="wipezero" title="优惠金额" align="center">
+                <GridColumn field="wipezero" title="优惠金额" align="right">
                     <template slot="body" slot-scope="scope">
                         <div class="item">
-                            <span v-if="scope.row.wipezero">{{ scope.row.wipezero |number2 }}</span>
-                            <span v-if="!scope.row.wipezero"></span>
+                            {{ toMoney(scope.row.wipezero, '￥') }}
                         </div>
                     </template>
                 </GridColumn>
@@ -170,13 +169,13 @@ export default {
         },
         selectCustomer(obj) {
             let vm = this;
-            this.getData("statement/getReceivableOverage", {unitid:obj.id}, function (data) {
+            this.getData("statement/getReceivableOverage", {unitid: obj.id}, function (data) {
                 vm.$set(vm.obj, 'unitid', obj.id);
                 vm.$set(vm.obj, 'name', obj.name);
-                if(!data){
+                if (!data) {
                     vm.$set(vm.obj, 'overage', 0);
-                }else{
-                    vm.$set(vm.obj, 'overage',data.debit);
+                } else {
+                    vm.$set(vm.obj, 'overage', data.debit);
                 }
             })
         },
@@ -184,7 +183,7 @@ export default {
             this.$set(this.obj, 'accountid', obj.id);
             this.$set(this.obj, 'accountname', obj.name);
         },
-        selectUser(obj){
+        selectUser(obj) {
             this.$set(this.obj, 'manager', obj.id);
             this.$set(this.obj, 'managername', obj.username);
         },

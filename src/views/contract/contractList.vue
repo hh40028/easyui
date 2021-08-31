@@ -68,10 +68,10 @@
                             <GridColumn field="effectivedate" title="生效日期" width="120" align="center"></GridColumn>
                             <GridColumn field="startdate" title="开始日期" width="120" align="center"></GridColumn>
                             <GridColumn field="enddate" title="结束日期" width="120" align="center"></GridColumn>
-                            <GridColumn field="amount" title="合同金额" width="120" align="center">
+                            <GridColumn field="amount" title="合同金额" width="120" align="right">
                                 <template slot="body" slot-scope="scope">
                                     <div class="item">
-                                        {{ scope.row.amount|number2 }}
+                                        {{ toMoney(scope.row.amount,'￥') }}
                                     </div>
                                 </template>
                             </GridColumn>

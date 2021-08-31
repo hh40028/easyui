@@ -4,23 +4,16 @@
             <div class="col-3 p-5">
                 <LinkButton iconCls="icon-add" :plain="true" @click="add">新增</LinkButton>
                 <LinkButton iconCls="icon-edit" :disabled="!obj.id" :plain="true" @click="edit">编辑</LinkButton>
-                <LinkButton iconCls="icon-reload" :plain="true" @click="load">刷新</LinkButton>
+                <LinkButton iconCls="icon-reload" :plain="true" @click="loadPage(pageNumber, pageSize)">刷新</LinkButton>
             </div>
             <div class="col-3 p-5"></div>
             <div class="col-3 p-5"></div>
             <div class="col-3 p-5">
-                <SearchBox class="form-control"
-                           placeholder="过滤..."
-                           v-model="filterString"
-                           @search="load($event)">
-                    <Addon>
-                        <span v-if="filterString" class="textbox-icon icon-clear" title="Clear value" @click="filterString=null"></span>
-                    </Addon>
-                </SearchBox>
+                <filterList @filterLoad="filter"></filterList>
             </div>
         </LayoutPanel>
         <LayoutPanel region="center" style="height:100%" bodyCls="f-column">
-            <TreeGrid style="height: calc(100vh - 100px)"
+            <DataGrid style="height: calc(100vh - 100px)"
                       :border="false"
                       class="f-full"
                       :columnResizing="true"
@@ -35,9 +28,11 @@
                       @pageChange="onPageChange($event)"
                       :pagination="true"
                       :pagePosition="'bottom'">
-                <GridColumn title="序号" align="center" width="50">
+                <GridColumn title="序号" width="50" align="center">
                     <template slot="body" slot-scope="scope">
-                        {{ scope.rowIndex }}
+                        <div class="item">
+                            {{ (scope.rowIndex+1) }}
+                        </div>
                     </template>
                 </GridColumn>
                 <GridColumn field="number" title="工序编号" align="center" width="130"></GridColumn>
@@ -52,7 +47,7 @@
                 <GridColumn field="productiontime" title="生产时间(分钟)" align="center" width="150"></GridColumn>
                 <GridColumn field="productiondeptname" title="生产部门" align="center" width="150"></GridColumn>
                 <GridColumn field="content" title="工序内容"></GridColumn>
-            </TreeGrid>
+            </DataGrid>
             <Dialog ref="editWorksequenceDlg" closed
                     :title="'编辑'"
                     :dialogStyle="{width:'400px',height:'600px'}"
@@ -95,6 +90,7 @@
 
 <script>
 import selectOrganization from '@/components/selectOrganization.vue';
+import filterList from '@/components/filterList.vue';
 
 export default {
     name: "app",
@@ -115,7 +111,7 @@ export default {
         this.loadPage(this.pageNumber, this.pageSize);
     },
     components: {
-        selectOrganization
+        selectOrganization, filterList
     },
     methods: {
         onPageChange(event) {
@@ -172,18 +168,11 @@ export default {
                 })
             })
         },
-    },
-    watch: {
-        filterString: {
-            handler() {
-                let vm = this;
-                if (this.timeout) clearTimeout(this.timeout);
-                this.timeout = setTimeout(function () {
-                    vm.loadPage(vm.pageNumber, vm.pageSize);
-                }, 500);
-            }
+        filter(filterString) {
+            this.filterString = filterString;
+            this.loadPage(this.pageNumber, this.pageSize);
         }
-    },
+    }
 }
 </script>
 
