@@ -18,8 +18,8 @@
                 </SearchBox>
             </div>
         </LayoutPanel>
-        <LayoutPanel region="center" style="height:100%">
-            <DataGrid style="height: calc(100vh - 101px)"
+        <LayoutPanel region="center" style="height:100%" bodyCls="f-column">
+            <DataGrid
                       :border="false"
                       class="f-full"
                       :columnResizing="true"

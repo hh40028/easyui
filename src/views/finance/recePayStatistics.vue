@@ -1,5 +1,5 @@
 <template>
-    <Layout bodyCls="f-column" style="height: calc(100vh - 50px)">
+    <Layout bodyCls="f-column" style="height: calc(100vh - 50px)" :border="false">
         <LayoutPanel region="north" style="height:50px;">
             <Panel :bodyStyle="{padding:'8px'}" :border="false">
                 <input name="g1" id="a1" type="radio" @click="changeType('customer')" :checked="api==='customer'"> <label for="a1">客户</label>
@@ -7,9 +7,8 @@
                 <LinkButton iconCls="icon-ok" :disabled="!obj.id" :plain="true" @click="$refs.viewHistoryDlg.open()">往来明细</LinkButton>
             </Panel>
         </LayoutPanel>
-        <LayoutPanel region="center" style="height:100%">
-            <DataGrid style="height: calc(100vh - 100px)"
-                      :border="false"
+        <LayoutPanel region="center" style="height:100%" bodyCls="f-column">
+            <DataGrid :border="false"
                       class="f-full"
                       :columnResizing="true"
                       :lazy="true"

@@ -1,5 +1,5 @@
 <template>
-    <Layout bodyCls="f-column" style="height: calc(100vh - 50px)">
+    <Layout bodyCls="f-column" style="height: calc(100vh - 50px)" :border="false">
         <LayoutPanel region="north" style="height:50px;">
             <div class="col-6">
                 <Panel :bodyStyle="{padding:'8px'}" :border="false">
@@ -18,8 +18,8 @@
                 </SearchBox>
             </div>
         </LayoutPanel>
-        <LayoutPanel region="center" style="height:100%">
-            <DataGrid style="height: calc(100vh - 101px)"
+        <LayoutPanel region="center" style="height:100%" bodyCls="f-column">
+            <DataGrid
                       :border="false"
                       class="f-full"
                       :columnResizing="true"

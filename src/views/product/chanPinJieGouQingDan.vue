@@ -1,20 +1,19 @@
 <template>
     <div>
-        <Layout bodyCls="f-column" style="height:calc(100vh - 50px);" :border="false">
-            <LayoutPanel region="north" style="height:50px;">
-                <div class="col-6 p-5">
+        <Layout bodyCls="f-column" style="height:calc(100vh - 52px);" :border="false">
+            <LayoutPanel region="north" :border="false">
+                <Panel :bodyStyle="{padding:'8px'}" :border="false">
                     <LinkButton iconCls="icon-add" :plain="true" @click="add">新增</LinkButton>
                     <LinkButton iconCls="icon-edit" :disabled="!selectCommodityObj" :plain="true" @click="edit">编辑</LinkButton>
                     <LinkButton iconCls="icon-edit" :disabled="!selectCommodityObj" :plain="true" @click="worksequenceSet">工序设置</LinkButton>
                     <LinkButton iconCls="icon-reload" :plain="true" @click="load">刷新</LinkButton>
-                </div>
-                <div class="col-3 p-5"></div>
-                <div class="col-3 p-5">
-                    <filterList @filterLoad="load" :placeholder="'过滤名称和编码'"></filterList>
-                </div>
+                    <div class="pull-right">
+                        <filterList @filterLoad="load" :placeholder="'过滤名称和编码'"></filterList>
+                    </div>
+                </Panel>
             </LayoutPanel>
-            <LayoutPanel region="center" style="height:100%" bodyCls="f-column">
-                <TreeGrid style="height: calc(100vh - 90px)"
+            <LayoutPanel region="center" style="height:100%" bodyCls="f-column" :border="false">
+                <TreeGrid
                           class="f-full"
                           :border="false"
                           :striped="true"
@@ -61,10 +60,12 @@
         <selectCommodity ref="selectAccessoriesCom" :single="false" @selectCommodity="getAccessories"></selectCommodity>
 
         <selectCommodity ref="selectChildCommodity" @selectCommodity="selectChildCommodity"></selectCommodity>
-        <Dialog ref="dlgEdit" bodyCls="f-column" title="编辑" :modal="true" closed :dialogStyle="{height:'80vh',width:'80%'}">
+        <Dialog ref="dlgEdit" bodyCls="f-column"
+                :draggable="true" :resizable="true"
+                title="编辑" :modal="true" closed :dialogStyle="{height:'80vh',width:'80%'}">
             <div class="f-full" style="overflow:auto">
                 <Layout bodyCls="f-column">
-                    <LayoutPanel region="north" style="height:40px;">
+                    <LayoutPanel region="north">
                         <Panel :bodyStyle="{padding:'5px',border:0}">
                             <LinkButton iconCls="icon-add" :plain="true" @click="selectChildCommodityOpen">选择子商品</LinkButton>
                             <LinkButton v-if="selectRow" iconCls="icon-remove" :plain="true" @click="removeChild()">移除</LinkButton>
@@ -95,6 +96,7 @@
         </Dialog>
         <Dialog ref="editWorksequenceDlg" closed
                 :title="'编辑工序'"
+                :draggable="true" :resizable="true"
                 :dialogStyle="{width:'80vw',height:'80vh'}"
                 bodyCls="f-column"
                 :modal="true">
@@ -198,6 +200,7 @@ export default {
                         vm.list.push(e);
                     }
                 })
+                console.log(vm.list);
             });
         },
         add() {

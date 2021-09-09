@@ -11,8 +11,8 @@
                 <input type="text" class="form-control" v-model="filterString" placeholder="过滤...">
             </div>
         </LayoutPanel>
-        <LayoutPanel region="center" style="height:100%">
-            <DataGrid style="height: calc(100vh - 100px)"
+        <LayoutPanel region="center" style="height:100%" bodyCls="f-column">
+            <DataGrid
                       :border="false"
                       class="f-full"
                       :columnResizing="true"

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Layout :style="'width:100%;height:'+screenHeight+'px;'" :border="false">
+        <Layout style="width:100vw;height:100vh" :border="false" bodyCls="f-column">
             <LayoutPanel region="north" style="height:50px;" :border="false" :bodyStyle="{backgroundColor: 'rgba(0,0,0,0.02)'}">
                 <div class="text-left col-4">
                     <div style="font-size: 20px;font-weight: 700;padding:10px">P3ERP</div>
@@ -10,10 +10,10 @@
                     <div style="float: right" class="text-right" v-if="$root.userObj">
                         <div style="float: right;" class="m-r-10 title c-orange" v-if="$root.userObj" @click="logout">注销</div>
                         <div style="float: right;" class="m-r-20 title">用户({{ $root.userObj.username }})</div>
-                        <div style="float: right;" class="m-r-20 title p-5">
-                            <router-link to="index">
-                                <img src="./assets/images/icons8-today.png" :class="{'cake':$root.taskcount>0}" style="height: 25px;">
-                            </router-link>
+                        <div style="float: right;" class="m-r-20 title">
+                            <div class="c-black" @click="$router.push('index')" :class="{'c-red':$root.taskcount>0}">
+                                待办
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
                     <div style="text-align: center;margin-bottom: 10px;padding-bottom: 10px;font-size: 14px">{{ menu.text }}</div>
                 </div>
             </LayoutPanel>
-            <LayoutPanel region="center" style="height: calc(100vh - 80);padding: 0" :border="false">
+            <LayoutPanel region="center" style="height: 100%" :border="true">
                 <router-view/>
             </LayoutPanel>
         </Layout>
@@ -114,6 +114,7 @@ export default {
     transform-origin: bottom;
     -webkit-transform-origin: bottom;
 }
+
 .select-menu {
     background-color: rgba(0, 0, 0, 0.1);
 }

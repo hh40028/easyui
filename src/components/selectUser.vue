@@ -1,7 +1,7 @@
 <template>
     <div>
         <input v-if="input" type="text" v-model="username" readonly @click="openDlg" class="form-control">
-        <Dialog ref="selectUserDlg" closed
+        <Dialog ref="selectUserDlg" closed bodyCls="f-column"
                 :title="'选择'"
                 :dialogStyle="{width:'50%',height:'50vh'}"
                 :modal="true">
@@ -29,7 +29,7 @@
 
 <script>
 export default {
-    props:['input','username'],
+    props:['input','username','organizationid'],
     name: "app",
     data() {
         return {
@@ -66,7 +66,8 @@ export default {
                 offset: pageSize * (pageNumber-1),
                 sort: "id",
                 direction: "desc",
-                filterString: this.filterString
+                filterString: this.filterString,
+                organizationid:this.organizationid>0?this.organizationid:0
             }, function (data) {
                 vm.total = data.total;
                 vm.data=[];

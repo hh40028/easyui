@@ -1,24 +1,20 @@
 <template>
     <div>
         <Layout bodyCls="f-column" style="height:calc(100vh - 50px);" :border="false">
-            <LayoutPanel region="north" style="height:50px;">
-                <div class="col-3 p-5">
+            <LayoutPanel region="north">
+                <Panel :bodyStyle="{padding:'8px'}" :border="false">
                     <LinkButton iconCls="icon-add" :plain="true" @click="add">开单</LinkButton>
                     <LinkButton iconCls="icon-ok" :disabled="!obj.id" :plain="true" @click="viewPurchase">查看</LinkButton>
-                </div>
-                <div class="col-3 p-5">
-                    <input class="m-t-5" type="checkbox" v-model="isRedback"
-                           @change="loadPage(pageNumber, pageSize)" id="ck">
-                    <label for="ck" :class="{'c-red':isRedback}">显示删除合同</label>
-                </div>
-                <div class="col-3 p-5"></div>
-                <div class="col-3 p-5">
-                    <filterList @filterLoad="filter"></filterList>
-                </div>
+<!--                    <input class="m-t-5" type="checkbox" v-model="isRedback"-->
+<!--                           @change="loadPage(pageNumber, pageSize)" id="ck">-->
+<!--                    <label for="ck" :class="{'c-red':isRedback}">显示删除合同</label>-->
+                    <div class="pull-right">
+                        <filterList @filterLoad="filter"></filterList>
+                    </div>
+                </Panel>
             </LayoutPanel>
-            <LayoutPanel region="center" style="height:100%">
-                <DataGrid style="height: calc(100vh - 100px)"
-                          :border="false"
+            <LayoutPanel region="center" style="height:100%" bodyCls="f-column" :border="false">
+                <DataGrid :border="false"
                           class="f-full"
                           :columnResizing="true"
                           :lazy="true"
@@ -34,36 +30,28 @@
                           @pageChange="onPageChange($event)"
                           :pagination="true"
                           :pagePosition="'bottom'">
-                    <GridColumnGroup :frozen="true" align="left" width="240">
-                        <GridHeaderRow>
-                            <GridColumn title="序号" width="40" align="center" :frozen="true">
-                                <template slot="body" slot-scope="scope">
-                                    <div class="item">
-                                        {{ scope.rowIndex + 1 }}
-                                    </div>
-                                </template>
-                            </GridColumn>
-                            <GridColumn field="inbound" title="入库" width="80" align="center" :frozen="true"></GridColumn>
-                            <GridColumn field="number" title="单据号" width="120" align="center"></GridColumn>
-                        </GridHeaderRow>
-                    </GridColumnGroup>
-                    <GridColumnGroup>
-                        <GridHeaderRow>
-                            <GridColumn field="suppliername" title="供应商" width="180" align="center"></GridColumn>
-                            <GridColumn field="deptname" title="采购部门" width="180" align="center"></GridColumn>
-                            <GridColumn field="purchasedate" title="采购日期" width="120" align="center"></GridColumn>
-                            <GridColumn field="managername" title="经办人" width="120" align="center"></GridColumn>
-                            <GridColumn field="username" title="编制人" width="120" align="center"></GridColumn>
-                            <GridColumn field="amount" title="采购金额" width="100" align="right">
-                                <template slot="body" slot-scope="scope">
-                                    <div class="item">
-                                        {{ toMoney(scope.row.amount, '￥') }}
-                                    </div>
-                                </template>
-                            </GridColumn>
-                            <GridColumn field="remark" title="摘要" width="280" align="left"></GridColumn>
-                        </GridHeaderRow>
-                    </GridColumnGroup>
+                    <GridColumn title="序号" width="40" align="center">
+                        <template slot="body" slot-scope="scope">
+                            <div class="item">
+                                {{ scope.rowIndex + 1 }}
+                            </div>
+                        </template>
+                    </GridColumn>
+                    <GridColumn field="inbound" title="入库" width="80" align="center"></GridColumn>
+                    <GridColumn field="number" title="单据号" width="120" align="center"></GridColumn>
+                    <GridColumn field="suppliername" title="供应商" width="180" align="center"></GridColumn>
+                    <GridColumn field="deptname" title="采购部门" width="180" align="center"></GridColumn>
+                    <GridColumn field="purchasedate" title="采购日期" width="120" align="center"></GridColumn>
+                    <GridColumn field="amount" title="采购金额" width="100" align="right">
+                        <template slot="body" slot-scope="scope">
+                            <div class="item">
+                                {{ toMoney(scope.row.amount, '￥') }}
+                            </div>
+                        </template>
+                    </GridColumn>
+                    <GridColumn field="managername" title="经办人" width="120" align="center"></GridColumn>
+                    <GridColumn field="username" title="编制人" width="120" align="center"></GridColumn>
+                    <GridColumn field="remark" title="摘要" width="280" align="left"></GridColumn>
                 </DataGrid>
             </LayoutPanel>
         </Layout>
@@ -168,7 +156,7 @@
                 :dialogStyle="{width:'80vW',height:'80vH'}"
                 bodyCls="f-column"
                 :modal="true">
-            <div class="f-full">
+            <div class="f-full" >
                 <purchaseView :id="obj.id"></purchaseView>
             </div>
             <div class="dialog-button text-center">
@@ -243,9 +231,6 @@ export default {
                 vm.total = data.total;
                 vm.data = [];
                 data.children.forEach(function (e) {
-                    if (!isNaN(e.amount)) {
-                        e.amount = e.amount.toFixed(2);
-                    }
                     if (e.submit && e.enterwarehouse) {
                         e.inbound = "完成";
                     }
@@ -356,8 +341,8 @@ export default {
             }
             return null;
         },
-        filter(filterString){
-            this.filterString=filterString;
+        filter(filterString) {
+            this.filterString = filterString;
             this.loadPage(this.pageNumber, this.pageSize);
         }
     }

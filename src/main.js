@@ -66,13 +66,17 @@ Vue.prototype.toMoney = function (price, chars) {
         return chars + '0.00';
     }
     if (price > 0) {
-        var priceString = price.toString();
-        var priceInt = parseInt(price);
-        var len = priceInt.toString().length;
-        var num = len / 3;
-        var remainder = len % 3;
-        var priceStr = '';
-        for (var i = 1; i <= len; i++) {
+        let priceString = price;
+        try {
+            priceString = price.toFixed(2);
+        } catch (e) {
+        }
+        let priceInt = parseInt(price);
+        let len = priceInt.toString().length;
+        let num = len / 3;
+        let remainder = len % 3;
+        let priceStr = '';
+        for (let i = 1; i <= len; i++) {
             priceStr += priceString.charAt(i - 1);
             if (i == (remainder) && len > remainder) priceStr += ',';
             if ((i - remainder) % 3 == 0 && i < len && i > remainder) priceStr += ',';
@@ -168,7 +172,8 @@ Vue.prototype.clone = function (obj) {
 new Vue({
     data() {
         return {
-            basePath: 'http://localhost:8080/',
+            basePath: 'http://192.168.3.105:8080/',
+            // basePath: 'http://localhost:8080/',
             uesrObj: undefined,
             menu: {text: '首页'},
             twomenu: {},

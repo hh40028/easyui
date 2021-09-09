@@ -1,10 +1,11 @@
 <template>
-    <Dialog ref="selectCommodityDlg" closed
+    <Dialog ref="selectCommodityDlg" closed :draggable="true" :resizable="true" bodyCls="f-column"
             :title="'选择商品'"
             :dialogStyle="{width:'60vW',height:'60vH'}"
             :modal="true">
         <DataGrid :columnResizing="true" :bodyStyle="{padding:'5px',border:0}"
                   :data="list"
+                  class="f-full"
                   idField="id" style="height:60vh"
                   :selectionMode="'single'"
                   @selectionChange="selectItem($event)">

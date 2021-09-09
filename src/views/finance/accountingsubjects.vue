@@ -1,7 +1,7 @@
 <template>
     <Layout bodyCls="f-column" style="height:calc(100vh - 50px);" :border="false">
-        <LayoutPanel region="north" style="height:50px;">
-            <div class="col-6 p-t-7">
+        <LayoutPanel region="north">
+            <div class="col-6 p-5">
                 <input type="radio" name="type" v-model="type" :value="'1'" @change="load" id="a1"><label for="a1" class="m-r-5">资产类</label>
                 <input type="radio" name="type" v-model="type" :value="'2'" @change="load" id="a2"><label for="a2" class="m-r-5">负债类</label>
                 <input type="radio" name="type" v-model="type" :value="'4'" @change="load" id="a3"><label for="a3" class="m-r-5">权益类</label>
@@ -13,8 +13,8 @@
                 <LinkButton :disabled="!obj.id" iconCls="icon-add" :plain="true" @click="addChild">增加下级科目</LinkButton>
             </div>
         </LayoutPanel>
-        <LayoutPanel region="center" style="height:100%">
-            <TreeGrid style="height: calc(100vh - 90px)"
+        <LayoutPanel region="center" style="height:100%" bodyCls="f-column">
+            <TreeGrid
                       class="f-full"
                       :border="false"
                       :striped="true"

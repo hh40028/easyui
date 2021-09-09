@@ -1,73 +1,70 @@
 <template>
-    <div>
-        <Layout bodyCls="f-column" style="height:calc(100vh - 50px);" :border="false">
-            <LayoutPanel region="north" style="height:50px;">
-                <div class="col-3 p-5">
-                    <LinkButton iconCls="icon-add" :plain="true" @click="add">新增</LinkButton>
-                    <LinkButton iconCls="icon-edit" :disabled="!orgObj" :plain="true" @click="edit">编辑</LinkButton>
-                    <LinkButton iconCls="icon-reload" :plain="true" @click="load">刷新</LinkButton>
-                </div>
-                <div class="col-3 p-5"></div>
-                <div class="col-3 p-5"></div>
-                <div class="col-3 p-5">
-                    <SearchBox class="form-control"
-                               placeholder="过滤..."
-                               v-model="filterString"
-                               @search="load($event)">
-                        <Addon>
-                            <span v-if="filterString" class="textbox-icon icon-clear" title="Clear value" @click="filterString=null"></span>
-                        </Addon>
-                    </SearchBox>
-                </div>
-            </LayoutPanel>
-            <LayoutPanel region="center" style="height:100%" bodyCls="f-column">
-                <TreeGrid style="height: calc(100vh - 90px)"
-                          class="f-full"
-                          :border="false"
-                          :striped="true"
-                          :columnResizing="true"
-                          @rowDblClick="edit"
-                          :data="list" @selectionChange="selectObj($event)"
-                          idField="id" treeField="name">
-                    <GridColumnGroup :frozen="true">
-                        <GridHeaderRow>
-                            <GridColumn field="name" title="部门名称" width="150"></GridColumn>
-                        </GridHeaderRow>
-                    </GridColumnGroup>
-                    <GridColumnGroup>
-                        <GridHeaderRow>
-                            <GridColumn field="area" title="所在区域" align="center" width="130"></GridColumn>
-                            <GridColumn field="address" title="办公地址" align="center" width="120"></GridColumn>
-                        </GridHeaderRow>
-                    </GridColumnGroup>
-                </TreeGrid>
-            </LayoutPanel>
-        </Layout>
-        <Dialog ref="dlgEdit" closed
-                :title="'编辑部门'"
-                :dialogStyle="{width:'400px',height:'320px'}"
-                bodyCls="f-column"
-                :modal="true">
-            <div class="f-full">
-                <div class="col-12 p-10">
-                    <label>部门名称</label>
-                    <input type="text" v-model="orgObj.name" class="form-control">
-                </div>
-                <div class="col-12 p-10">
-                    <label>所在区域</label>
-                    <input type="text" v-model="orgObj.area" class="form-control">
-                </div>
-                <div class="col-12 p-10">
-                    <label>办公地址</label>
-                    <input type="text" v-model="orgObj.address" class="form-control">
-                </div>
+    <Layout bodyCls="f-column" style="height:calc(100vh - 50px);" :border="false">
+        <LayoutPanel region="north" style="height:50px;">
+            <div class="col-3 p-5">
+                <LinkButton iconCls="icon-add" :plain="true" @click="add">新增</LinkButton>
+                <LinkButton iconCls="icon-edit" :disabled="!orgObj" :plain="true" @click="edit">编辑</LinkButton>
+                <LinkButton iconCls="icon-reload" :plain="true" @click="load">刷新</LinkButton>
             </div>
-            <div class="dialog-button">
-                <LinkButton style="width:80px" @click="save">保存</LinkButton>
-                <LinkButton style="width:80px" @click="$refs.dlgEdit.close()">关闭</LinkButton>
+            <div class="col-3 p-5"></div>
+            <div class="col-3 p-5"></div>
+            <div class="col-3 p-5">
+                <SearchBox class="form-control"
+                           placeholder="过滤..."
+                           v-model="filterString"
+                           @search="load($event)">
+                    <Addon>
+                        <span v-if="filterString" class="textbox-icon icon-clear" title="Clear value" @click="filterString=null"></span>
+                    </Addon>
+                </SearchBox>
             </div>
-        </Dialog>
-    </div>
+        </LayoutPanel>
+        <LayoutPanel region="center" style="height:100%" bodyCls="f-column">
+            <TreeGrid class="f-full"
+                      :border="false"
+                      :striped="true"
+                      :columnResizing="true"
+                      @rowDblClick="edit"
+                      :data="list" @selectionChange="selectObj($event)"
+                      idField="id" treeField="name">
+                <GridColumnGroup :frozen="true">
+                    <GridHeaderRow>
+                        <GridColumn field="name" title="部门名称" width="150"></GridColumn>
+                    </GridHeaderRow>
+                </GridColumnGroup>
+                <GridColumnGroup>
+                    <GridHeaderRow>
+                        <GridColumn field="area" title="所在区域" align="center" width="130"></GridColumn>
+                        <GridColumn field="address" title="办公地址" align="center" width="120"></GridColumn>
+                    </GridHeaderRow>
+                </GridColumnGroup>
+            </TreeGrid>
+            <Dialog ref="dlgEdit" closed
+                    :title="'编辑部门'"
+                    :dialogStyle="{width:'400px',height:'320px'}"
+                    bodyCls="f-column"
+                    :modal="true">
+                <div class="f-full">
+                    <div class="col-12 p-10">
+                        <label>部门名称</label>
+                        <input type="text" v-model="orgObj.name" class="form-control">
+                    </div>
+                    <div class="col-12 p-10">
+                        <label>所在区域</label>
+                        <input type="text" v-model="orgObj.area" class="form-control">
+                    </div>
+                    <div class="col-12 p-10">
+                        <label>办公地址</label>
+                        <input type="text" v-model="orgObj.address" class="form-control">
+                    </div>
+                </div>
+                <div class="dialog-button">
+                    <LinkButton style="width:80px" @click="save">保存</LinkButton>
+                    <LinkButton style="width:80px" @click="$refs.dlgEdit.close()">关闭</LinkButton>
+                </div>
+            </Dialog>
+        </LayoutPanel>
+    </Layout>
 </template>
 
 <script>
@@ -75,7 +72,6 @@
 export default {
     data() {
         return {
-            screenHeight: window.innerHeight,
             list: [],
             filterString: '',
             tree: [],
@@ -83,19 +79,11 @@ export default {
             orgObj: {},
             selectRow: null,
             node: {},
-            pid:-1
+            pid: -1
         };
     },
     created() {
-    },
-    mounted() {
         this.load();
-        const that = this;
-        window.onresize = () => {
-            return (() => {
-                that.screenHeight = window.innerHeight
-            })()
-        }
     },
     methods: {
         load() {
@@ -109,7 +97,7 @@ export default {
             });
         },
         add() {
-            if (this.pid<0) {
+            if (this.pid < 0) {
                 this.alert("请选择一个部门");
             } else {
                 this.orgObj = {
@@ -119,7 +107,7 @@ export default {
             }
         },
         selectObj(obj) {
-            this.pid=obj.id;
+            this.pid = obj.id;
             this.orgObj = {
                 id: obj.id,
                 level: obj.level + 1,

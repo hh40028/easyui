@@ -1,19 +1,16 @@
 <template>
-    <Layout bodyCls="f-column" :border="false">
-        <LayoutPanel region="north" style="height:50px;">
-            <div class="col-3 p-5">
+    <Layout bodyCls="f-column" style="height: calc(100vh - 50px)">
+        <LayoutPanel region="north">
+            <Panel :bodyStyle="{padding:'8px'}" :border="false">
                 <LinkButton iconCls="icon-add" :plain="true" @click="add">新建</LinkButton>
                 <LinkButton iconCls="icon-edit" :disabled="!obj.id" :plain="true" @click="edit">编辑</LinkButton>
-            </div>
-            <div class="col-3 p-5"></div>
-            <div class="col-3 p-5"></div>
-            <div class="col-3 p-5">
-                <input type="text" class="form-control" v-model="filterString" placeholder="过滤...">
-            </div>
+                <div class="pull-right">
+                    <filterList @filterLoad="filter"></filterList>
+                </div>
+            </Panel>
         </LayoutPanel>
-        <LayoutPanel region="center" bodyCls="f-column" style="height: 100%;">
-            <DataGrid style="height: calc(100vh - 100px)"
-                      :border="false"
+        <LayoutPanel region="center" style="height:100%" bodyCls="f-column">
+            <DataGrid :border="false"
                       class="f-full"
                       :columnResizing="true"
                       :lazy="true"
@@ -44,7 +41,7 @@
                 </GridColumnGroup>
                 <GridColumnGroup>
                     <GridHeaderRow>
-                          <GridColumn field="typename" title="商品类型" width="120" align="center"></GridColumn>
+                        <GridColumn field="typename" title="商品类型" width="120" align="center"></GridColumn>
                         <GridColumn field="norm" title="商品规格" width="120" align="center"></GridColumn>
                         <GridColumn field="model" title="商品型号" width="120" align="center"></GridColumn>
                         <GridColumn field="unit" title="计量单位" width="120" align="center"></GridColumn>
@@ -70,7 +67,9 @@
                 </div>
                 <div class="col-4 p-t-15 p-l-15 p-r-15 ">
                     <label>商品类别</label><br>
-                    <ComboBox class="w-100 form-control" valueField="id" textField="name" v-model="obj.typeid" :data="types"></ComboBox>
+                    <select v-model="obj.typeid" class="form-control">
+                        <option v-for="type in types" :key="type.id" :value="type.id">{{ type.name }}</option>
+                    </select>
                 </div>
                 <div class="col-4 p-t-15 p-l-15 p-r-15 ">
                     <label>商品规格</label><br>
@@ -81,8 +80,10 @@
                     <input type="text" class="form-control" v-model="obj.model">
                 </div>
                 <div class="col-4 p-t-15 p-l-15 p-r-15 ">
-                    <label>计量单位</label><br>
-                    <ComboBox class="w-100 form-control" valueField="id" textField="name" v-model="obj.unit" :data="units"></ComboBox>
+                    <label>计量单位</label>
+                    <select v-model="obj.unit" class="form-control">
+                        <option v-for="unit in units" :key="unit.name" :value="unit.name">{{ unit.name }}</option>
+                    </select>
                 </div>
                 <div class="col-4 p-t-15 p-l-15 p-r-15 ">
                     <label>大包装单位</label><br>
@@ -109,16 +110,19 @@
                     <input type="text" class="form-control" v-model="obj.origin">
                 </div>
                 <div class="col-4 p-t-15 p-l-15 p-r-15 ">
-                    <label>供应商</label><br>
-                    <ComboBox class="w-100 form-control" valueField="id" textField="name" v-model="obj.supplierid" :data="suppliers"></ComboBox>
+                    <label>供应商</label>
+                    <selectSupplier :input="true" :suppliername="obj.suppliername" @selectSupplier="selectSupplier"></selectSupplier>
+                    <!--                    <ComboBox class="w-100 form-control" valueField="id" textField="name" v-model="obj.supplierid" :data="suppliers"></ComboBox>-->
                 </div>
                 <div class="col-4 p-t-15 p-l-15 p-r-15 ">
                     <label>条码</label><br>
                     <input type="text" class="form-control" v-model="obj.barcode">
                 </div>
                 <div class="col-4 p-t-15 p-l-15 p-r-15 ">
-                    <label>来源</label><br>
-                    <ComboBox class="w-100 form-control" valueField="id" textField="name" v-model="obj.source" :data="sources"></ComboBox>
+                    <label>来源</label>
+                    <select v-model="obj.source" class="form-control">
+                        <option v-for="source in sources" :key="source.id" :value="source.id">{{ source.name }}</option>
+                    </select>
                 </div>
                 <div class="col-12 p-t-15 p-l-15 p-r-15 ">
                     <label>备注</label><br>
@@ -136,6 +140,9 @@
 </template>
 
 <script>
+import selectSupplier from '@/components/selectSupplier.vue';
+import filterList from '@/components/filterList.vue';
+
 export default {
     name: "app",
     data() {
@@ -150,9 +157,11 @@ export default {
             units: [],
             types: [],
             sources: [],
-            filterString:'',
-            timeout:null
+            timeout: null
         }
+    },
+    components: {
+        selectSupplier, filterList
     },
     created: function () {
         this.loadPage(this.pageNumber, this.pageSize);
@@ -224,19 +233,16 @@ export default {
                 // vm.data = [];
                 vm.loadPage(vm.pageNumber, vm.pageSize);
             })
+        },
+        selectSupplier(obj) {
+            this.$set(this.obj, 'supplierid', obj.id);
+            this.$set(this.obj, 'suppliername', obj.name);
+        },
+        filter(filterString){
+            this.filterString=filterString;
+            this.loadPage(this.pageNumber, this.pageSize);
         }
-    },
-    watch: {
-        filterString: {
-            handler() {
-                let vm = this;
-                if (this.timeout) clearTimeout(this.timeout);
-                this.timeout = setTimeout(function () {
-                    vm.loadPage(vm.pageNumber, vm.pageSize);
-                }, 500);
-            }
-        }
-    },
+    }
 }
 </script>
 

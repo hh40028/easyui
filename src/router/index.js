@@ -29,6 +29,10 @@ import supplierBegin from '../views/customerSupplier/supplierBegin.vue'
 import receiptOrder from '../views/finance/receiptOrder.vue'
 import paymentOrder from '../views/finance/paymentOrder.vue'
 import recePayStatistics from '../views/finance/recePayStatistics.vue'
+import outboundList from '../views/stock/outboundList.vue'
+import shengChanJiHua from '../views/product/shengChanJiHua.vue'
+import workorderList from '../views/product/workorderList.vue'
+import inboundList from '../views/stock/inboundList.vue'
 
 Vue.use(VueRouter)
 
@@ -63,6 +67,10 @@ const routes = [
   {path: '/receiptOrder', name: 'receiptOrder', component: receiptOrder},
   {path: '/paymentOrder', name: 'paymentOrder', component: paymentOrder},
   {path: '/recePayStatistics', name: 'recePayStatistics', component: recePayStatistics},
+  {path: '/outboundList', name: 'outboundList', component: outboundList},
+  {path: '/shengChanJiHua', name: 'shengChanJiHua', component: shengChanJiHua},
+  {path: '/jiaGongDan', name: 'workorderList', component: workorderList},
+  {path: '/ruKuDan', name: 'inboundList', component: inboundList},
 ]
 
 const router = new VueRouter({

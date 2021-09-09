@@ -1,14 +1,29 @@
 <template>
     <div>
         <Layout bodyCls="f-column" :border="false">
-            <LayoutPanel region="north" style="height:70px;" :border="false">
-                <div class="col-3 p-5 f-16">供应商家: {{obj.suppliername}}</div>
-                <div class="col-3 p-5 f-16">经办人员: {{obj.username}}</div>
-                <div class="col-3 p-5 f-16">采购日期: {{obj.purchasedate}} </div>
-                <div class="col-3 p-5 f-16">合计金额: {{obj.amount|number2}} 元</div>
-                <div class="col-12 p-5 f-16">摘要说明: {{obj.remark}} </div>
+            <LayoutPanel region="north" :border="false">
+                <table class="w-100" border="1">
+                    <tbody>
+                    <tr>
+                        <td class="text-right">供应商家</td>
+                        <td class="text-left">{{obj.suppliername}}</td>
+                        <td class="text-right">经办人员</td>
+                        <td class="text-left">{{obj.username}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">采购日期</td>
+                        <td class="text-left">{{obj.purchasedate}}</td>
+                        <td class="text-right">合计金额</td>
+                        <td class="text-left">{{obj.amount|number2}} 元</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">摘要说明</td>
+                        <td class="text-left" colspan="3">{{obj.remark}}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </LayoutPanel>
-            <LayoutPanel region="center" style="height:100%" :border="true">
+            <LayoutPanel region="center" style="height:100%" :border="false">
                 <DataGrid :columnResizing="true" class="f-full"
                           :bodyStyle="{padding:'5px',border:0}"
                           :border="false"
