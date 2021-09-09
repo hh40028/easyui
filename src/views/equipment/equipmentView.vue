@@ -1,5 +1,5 @@
 <template>
-    <Layout bodyCls="f-column" style="height:calc(100vh - 50px);">
+    <Layout bodyCls="f-column" style="height:calc(100vh - 52px);">
         <LayoutPanel region="center" style="height:100%">
             <Tabs class="f-full" :border="false">
                 <TabPanel :title="'设备台账'">

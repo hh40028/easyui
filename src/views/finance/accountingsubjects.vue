@@ -1,5 +1,5 @@
 <template>
-    <Layout bodyCls="f-column" style="height:calc(100vh - 50px);" :border="false">
+    <Layout bodyCls="f-column" style="height:calc(100vh - 52px);" :border="false">
         <LayoutPanel region="north">
             <div class="col-6 p-5">
                 <input type="radio" name="type" v-model="type" :value="'1'" @change="load" id="a1"><label for="a1" class="m-r-5">资产类</label>

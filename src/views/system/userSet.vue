@@ -1,5 +1,5 @@
 <template>
-    <Layout bodyCls="f-column" style="height:calc(100vh - 50px);" :border="false">
+    <Layout bodyCls="f-column" style="height:calc(100vh - 52px);" :border="false">
         <LayoutPanel region="west" style="width:280px;">
             <Tree :data="list" @selectionChange="selectOrg($event)"></Tree>
         </LayoutPanel>

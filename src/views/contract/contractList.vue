@@ -1,7 +1,7 @@
 <template>
     <div>
-        <Layout bodyCls="f-column" style="height:calc(100vh - 50px);" :border="false">
-            <LayoutPanel region="north">
+        <Layout bodyCls="f-column" style="height:calc(100vh - 52px);" :border="false">
+            <LayoutPanel region="north" :border="false">
                <Panel :bodyStyle="{padding:'8px'}" :border="false">
                     <LinkButton iconCls="icon-add" :plain="true" @click="add">新建</LinkButton>
                     <LinkButton iconCls="icon-ok" class="m-r-5" :disabled="!obj.id" :plain="true" @click="view">查看</LinkButton>
@@ -13,7 +13,7 @@
                     </div>
                 </Panel>
             </LayoutPanel>
-            <LayoutPanel region="center" style="height:100%" bodyCls="f-column">
+            <LayoutPanel region="center" style="height:100%" bodyCls="f-column" :border="false">
                 <DataGrid
                     :border="false"
                     class="f-full"

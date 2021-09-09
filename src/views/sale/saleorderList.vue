@@ -1,22 +1,19 @@
 <template>
     <div>
-        <Layout bodyCls="f-column" style="height:calc(100vh - 50px);" :border="false">
-            <LayoutPanel region="north" style="height:50px;">
-                <div class="col-3 p-5">
-                    <LinkButton iconCls="icon-add" :plain="true" @click="add">开单</LinkButton>
-                    <LinkButton iconCls="icon-ok" :disabled="!obj.id" :plain="true" @click="viewSaleorder">查看</LinkButton>
-                </div>
-                <div class="col-3 p-5 text-center">
+        <Layout bodyCls="f-column" style="height:calc(100vh - 52px);" :border="false">
+            <LayoutPanel region="north" :border="false">
+                <Panel :bodyStyle="{padding:'8px'}" :border="false">
+                    <LinkButton iconCls="icon-add" :plain="true" @click="add">新建</LinkButton>
+                    <LinkButton iconCls="icon-ok" class="m-r-5" :disabled="!obj.id" :plain="true" @click="view">查看</LinkButton>
                     <input class="m-t-5" type="checkbox" v-model="isRedback"
                            @change="loadPage(pageNumber, pageSize)" id="ck">
                     <label for="ck" :class="{'c-red':isRedback}">显示删除合同</label>
-                </div>
-                <div class="col-3 p-5"></div>
-                <div class="col-3 p-5">
-                    <input type="text" class="form-control" onclick="select()" v-model="filterString" placeholder="过滤...">
-                </div>
+                    <div class="pull-right">
+                        <filterList @filterLoad="filterLoad"></filterList>
+                    </div>
+                </Panel>
             </LayoutPanel>
-            <LayoutPanel region="center" style="height:100%" bodyCls="f-column">
+            <LayoutPanel region="center" style="height:100%" bodyCls="f-column" :border="false">
                 <DataGrid
                     :border="false"
                     class="f-full"
@@ -91,6 +88,7 @@ import selectCommodity from '@/components/selectCommodity.vue';
 import selectSupplier from '@/components/selectSupplier.vue';
 import saleorderView from '@/components/saleorderView.vue';
 import selectUser from '@/components/selectUser.vue';
+import filterList from '@/components/filterList.vue'
 
 export default {
     name: "app",
@@ -114,7 +112,7 @@ export default {
         this.loadPage(this.pageNumber, this.pageSize);
     },
     components: {
-        selectCommodity, selectUser, selectSupplier, saleorderView
+        selectCommodity, selectUser, selectSupplier, saleorderView, filterList
     },
     methods: {
         loadWarehouses: function () {
@@ -266,19 +264,12 @@ export default {
                     vm.loadPage(vm.pageNumber, vm.pageSize);
                 })
             })
+        },
+        filterLoad(fs) {
+            this.filterString = fs;
+            this.loadPage(this.pageNumber, this.pageSize);
         }
-    },
-    watch: {
-        filterString: {
-            handler() {
-                let vm = this;
-                if (this.timeout) clearTimeout(this.timeout);
-                this.timeout = setTimeout(function () {
-                    vm.loadPage(vm.pageNumber, vm.pageSize);
-                }, 500);
-            }
-        }
-    },
+    }
 }
 </script>
 

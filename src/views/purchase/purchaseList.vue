@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Layout bodyCls="f-column" style="height:calc(100vh - 50px);" :border="false">
+        <Layout bodyCls="f-column" style="height:calc(100vh - 52px);" :border="false">
             <LayoutPanel region="north">
                 <Panel :bodyStyle="{padding:'8px'}" :border="false">
                     <LinkButton iconCls="icon-add" :plain="true" @click="add">开单</LinkButton>

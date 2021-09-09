@@ -1,6 +1,6 @@
 <template>
-    <Layout bodyCls="f-column" style="height: calc(100vh - 50px)">
-        <LayoutPanel region="north">
+    <Layout bodyCls="f-column" style="height: calc(100vh - 52px)" :border="false">
+        <LayoutPanel region="north" :border="false">
             <Panel :bodyStyle="{padding:'8px'}" :border="false">
                 <LinkButton iconCls="icon-add" :plain="true" @click="add">新建</LinkButton>
                 <LinkButton iconCls="icon-edit" :disabled="!obj.id" :plain="true" @click="edit">编辑</LinkButton>
@@ -9,7 +9,7 @@
                 </div>
             </Panel>
         </LayoutPanel>
-        <LayoutPanel region="center" style="height:100%" bodyCls="f-column">
+        <LayoutPanel region="center" style="height:100%" bodyCls="f-column" :border="false">
             <DataGrid :border="false"
                       class="f-full"
                       :columnResizing="true"
@@ -25,33 +25,25 @@
                       @pageChange="onPageChange($event)"
                       :pagination="true"
                       :pagePosition="'bottom'">
-                <GridColumnGroup :frozen="true" align="left" width="240">
-                    <GridHeaderRow>
-                        <GridColumn field="status" :width="40" align="center" :frozen="true">
-                            <template slot="header" slot-scope="scope">
-                                启用
-                            </template>
-                            <template slot="body" slot-scope="scope">
-                                <input type="checkbox" v-model="scope.row.status" @change="onCheckedChange(scope.row)">
-                            </template>
-                        </GridColumn>
-                        <GridColumn field="number" title="商品编号" width="80" align="center" :frozen="true"></GridColumn>
-                        <GridColumn field="name" title="商品名称" width="120" align="center"></GridColumn>
-                    </GridHeaderRow>
-                </GridColumnGroup>
-                <GridColumnGroup>
-                    <GridHeaderRow>
-                        <GridColumn field="typename" title="商品类型" width="120" align="center"></GridColumn>
-                        <GridColumn field="norm" title="商品规格" width="120" align="center"></GridColumn>
-                        <GridColumn field="model" title="商品型号" width="120" align="center"></GridColumn>
-                        <GridColumn field="unit" title="计量单位" width="120" align="center"></GridColumn>
-                        <GridColumn field="bigpackage" title="大包装单位" width="120" align="center"></GridColumn>
-                        <GridColumn field="conversionrelationship" title="大小包换算" width="120" align="center"></GridColumn>
-                        <GridColumn field="suppliername" title="供应商" width="120" align="center"></GridColumn>
-                        <GridColumn field="sourcename" title="来源" width="120" align="center"></GridColumn>
-                        <GridColumn field="remark" width="580" title="备注" align="center"></GridColumn>
-                    </GridHeaderRow>
-                </GridColumnGroup>
+                <GridColumn field="status" width="40" align="center" :frozen="true">
+                    <template slot="header" slot-scope="scope">
+                        启用
+                    </template>
+                    <template slot="body" slot-scope="scope">
+                        <input type="checkbox" v-model="scope.row.status" @change="onCheckedChange(scope.row)">
+                    </template>
+                </GridColumn>
+                <GridColumn field="number" title="商品编号" width="80" align="center" :frozen="true"></GridColumn>
+                <GridColumn field="name" title="商品名称" width="120" align="center"></GridColumn>
+                <GridColumn field="typename" title="商品类型" width="120" align="center"></GridColumn>
+                <GridColumn field="norm" title="商品规格" width="120" align="center"></GridColumn>
+                <GridColumn field="model" title="商品型号" width="120" align="center"></GridColumn>
+                <GridColumn field="unit" title="计量单位" width="120" align="center"></GridColumn>
+                <GridColumn field="bigpackage" title="大包装单位" width="120" align="center"></GridColumn>
+                <GridColumn field="conversionrelationship" title="大小包换算" width="120" align="center"></GridColumn>
+                <GridColumn field="suppliername" title="供应商" width="120" align="center"></GridColumn>
+                <GridColumn field="sourcename" title="来源" width="120" align="center"></GridColumn>
+                <GridColumn field="remark" width="580" title="备注" align="left"></GridColumn>
             </DataGrid>
             <Dialog ref="d1" closed
                     :title="'编辑商品信息'"
@@ -238,8 +230,8 @@ export default {
             this.$set(this.obj, 'supplierid', obj.id);
             this.$set(this.obj, 'suppliername', obj.name);
         },
-        filter(filterString){
-            this.filterString=filterString;
+        filter(filterString) {
+            this.filterString = filterString;
             this.loadPage(this.pageNumber, this.pageSize);
         }
     }

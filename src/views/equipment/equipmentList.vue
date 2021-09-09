@@ -1,5 +1,5 @@
 <template>
-    <Layout bodyCls="f-column" style="height:calc(100vh - 50px);">
+    <Layout bodyCls="f-column" style="height:calc(100vh - 52px);">
         <LayoutPanel region="north" style="height:50px;">
             <Panel :bodyStyle="{padding:'5px'}" :border="false">
                 <LinkButton iconCls="icon-add" :plain="true" @click="add">新增</LinkButton>

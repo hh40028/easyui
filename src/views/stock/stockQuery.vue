@@ -1,43 +1,35 @@
 <template>
     <div>
-        <Layout bodyCls="f-column" style="height:calc(100vh - 50px);" :border="false">
-            <LayoutPanel region="north" style="height:60px;">
-                <div class="col-3 p-10">
-                    <select v-model="warehouseid" class="form-control" @change="loadPage(pageNumber, pageSize)">
-                        <option v-for="w in warehouses" :key="w.id" :value="w.id">{{w.name}}</option>
+        <Layout bodyCls="f-column" style="height:calc(100vh - 52px);" :border="false">
+            <LayoutPanel region="north" :border="false">
+                <Panel :bodyStyle="{padding:'8px'}" :border="false">
+                    <select v-model="warehouseid" class="form-control" style="width:200px" @change="loadPage(pageNumber, pageSize)">
+                        <option v-for="w in warehouses" :key="w.id" :value="w.id">{{ w.name }}</option>
                     </select>
-                </div>
-                <div class="col-6 p-10"></div>
-                <div class="col-3 p-10">
-                    <SearchBox class="form-control"
-                               placeholder="过滤..."
-                               v-model="filterString"
-                               @search="onSearch($event)">
-                        <Addon>
-                            <span v-if="filterString" class="textbox-icon icon-clear" title="Clear value" @click="filterString=null"></span>
-                        </Addon>
-                    </SearchBox>
-                </div>
+                    <div class="pull-right">
+                        <filterList @filterLoad="filter"></filterList>
+                    </div>
+                </Panel>
             </LayoutPanel>
-            <LayoutPanel region="center" style="height:100%" bodyCls="f-column">
+            <LayoutPanel region="center" style="height:100%" bodyCls="f-column" :border="false">
                 <DataGrid
-                          :border="false"
-                          class="f-full"
-                          :columnResizing="true"
-                          :lazy="true"
-                          :data="data"
-                          :total="total"
-                          selectionMode="single"
-                          :rowCss="getRowCss"
-                          :loading="loading"
-                          @selectionChange="selectObj($event)"
-                          @rowDblClick="viewSaleorder"
-                          :pageNumber="pageNumber"
-                          :pageSize="pageSize"
-                          @pageChange="onPageChange($event)"
-                          :pagination="true"
-                          :pagePosition="'bottom'">
-                    <GridColumnGroup :frozen="true" align="left" width="240">
+                    :border="false"
+                    class="f-full"
+                    :columnResizing="true"
+                    :lazy="true"
+                    :data="data"
+                    :total="total"
+                    selectionMode="single"
+                    :rowCss="getRowCss"
+                    :loading="loading"
+                    @selectionChange="selectObj($event)"
+                    @rowDblClick="viewSaleorder"
+                    :pageNumber="pageNumber"
+                    :pageSize="pageSize"
+                    @pageChange="onPageChange($event)"
+                    :pagination="true"
+                    :pagePosition="'bottom'">
+                    <GridColumnGroup :frozen="true" align="left" width="280">
                         <GridHeaderRow>
                             <GridColumn title="序号" width="40" align="center" :frozen="true">
                                 <template slot="body" slot-scope="scope">
@@ -57,9 +49,9 @@
                             <GridColumn field="norm" title="规格" width="120" align="center"></GridColumn>
                             <GridColumn field="model" title="型号" width="120" align="center"></GridColumn>
                             <GridColumn field="unit" title="单位" width="100" align="center"></GridColumn>
-                            <GridColumn field="stockprice" title="库存均价" width="120" align="center"></GridColumn>
-                            <GridColumn field="stockcount" title="库存数量" width="120" align="center"></GridColumn>
-                            <GridColumn field="amount" title="合计" width="120" align="center"></GridColumn>
+                            <GridColumn field="stockprice" title="库存均价" width="120" align="right"></GridColumn>
+                            <GridColumn field="stockcount" title="库存数量" width="120" align="right"></GridColumn>
+                            <GridColumn field="amount" title="合计" width="120" align="right"></GridColumn>
                         </GridHeaderRow>
                     </GridColumnGroup>
                 </DataGrid>
@@ -70,6 +62,7 @@
 
 <script>
 
+import filterList from '@/components/filterList.vue';
 export default {
     name: "app",
     data() {
@@ -80,10 +73,10 @@ export default {
             data: [],
             loading: false,
             obj: {},
-            filterString:'',
-            warehouseid:0,
-            warehouses:[
-                {id:0,name:'全部仓库'}
+            filterString: '',
+            warehouseid: 0,
+            warehouses: [
+                {id: 0, name: '全部仓库'}
             ],
         }
     },
@@ -91,11 +84,14 @@ export default {
         this.loadWarehouses();
         this.loadPage(this.pageNumber, this.pageSize);
     },
+    components: {
+         filterList
+    },
     methods: {
         loadWarehouses: function () {
             let vm = this;
             this.getData("warehouse/getList", {}, function (data) {
-                data.forEach(function (e){
+                data.forEach(function (e) {
                     vm.warehouses.push(e);
                 })
             })
@@ -115,19 +111,19 @@ export default {
                 sort: "id",
                 direction: "desc",
                 filterString: this.filterString,
-                warehouseid:this.warehouseid
+                warehouseid: this.warehouseid
             }, function (data) {
                 vm.total = data.total;
                 vm.data = [];
                 data.children.forEach(function (e) {
-                    if(!isNaN(e.stockprice)){
-                        e.stockprice=e.stockprice.toFixed(2);
+                    if (!isNaN(e.stockprice)) {
+                        e.stockprice = e.stockprice.toFixed(2);
                     }
-                    if(!isNaN(e.stockcount)){
-                        e.stockcount=e.stockcount.toFixed(2);
+                    if (!isNaN(e.stockcount)) {
+                        e.stockcount = e.stockcount.toFixed(2);
                     }
-                    if(!isNaN(e.amount)){
-                        e.amount=e.amount.toFixed(2);
+                    if (!isNaN(e.amount)) {
+                        e.amount = e.amount.toFixed(2);
                     }
                     vm.data.push(e);
                 })
@@ -137,8 +133,9 @@ export default {
         selectObj(obj) {
             this.obj = this.clone(obj);
         },
-        onSearch(e){
-
+        filter(fs){
+            this.filterString=fs;
+            this.loadPage(this.pageNumber, this.pageSize);
         }
     }
 }

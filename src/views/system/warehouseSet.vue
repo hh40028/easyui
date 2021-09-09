@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Layout bodyCls="f-column" style="height:calc(100vh - 50px);" :border="false">
+        <Layout bodyCls="f-column" style="height:calc(100vh - 52px);" :border="false">
             <LayoutPanel region="east" style="width:20%;">
                 <p class="text-center" v-if="!warehouse.id">选择左面仓库显示货位树</p>
                 <Panel :bodyStyle="{padding:'5px'}" :border="false" v-if="warehouse.id>0">

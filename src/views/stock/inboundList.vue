@@ -40,11 +40,11 @@
                         </div>
                     </template>
                 </GridColumn>
+                <GridColumn field="warehousename" title="仓库名称" width="180" align="center"></GridColumn>
                 <GridColumn field="type" title="入库类型" width="180" align="center"></GridColumn>
                 <GridColumn field="relevancenumber" title="关联单号" width="180" align="center"></GridColumn>
-                <GridColumn field="outstocktime" title="入库日期" width="120" align="center"></GridColumn>
-                <GridColumn field="username" title="录入人" width="100" align="center"></GridColumn>
-                <GridColumn field="remark" title="摘要" width="280" align="left"></GridColumn>
+                <GridColumn field="entrytime" title="入库日期" width="120" align="center"></GridColumn>
+                <GridColumn field="username" title="入库人" width="100" align="center"></GridColumn>
             </DataGrid>
             <Dialog ref="viewInboundDld" closed
                     :title="'入库单明细'"
@@ -57,7 +57,7 @@
                     <Layout style="height:calc(60vh - 100px);" :border="false" bodyCls="f-column">
                         <LayoutPanel region="north" :border="false">
                             <div v-if="obj.submit" style="position: absolute;top:10px;right:10px;z-index: 10000000">
-                                <img src="../../assets/images/chuku.png" style="height:50px">
+                                <img src="../../assets/images/ruku.png" style="height:50px">
                             </div>
                             <table border="1" class="w-100">
                                 <tbody>
@@ -68,10 +68,16 @@
                                     <td class="text-left" style="width: 25%">{{ obj.type }}</td>
                                 </tr>
                                 <tr>
+                                    <td class="text-right" style="width: 25%">入库类型</td>
+                                    <td class="text-left" style="width: 25%">{{ obj.type }}</td>
+                                    <td class="text-right" style="width: 25%">仓库名称</td>
+                                    <td class="text-left" style="width: 25%">{{ obj.warehousename }}</td>
+                                </tr>
+                                <tr>
                                     <td class="text-right" style="width: 25%">关联单号</td>
                                     <td class="text-left" style="width: 25%">{{ obj.relevancenumber }}</td>
                                     <td class="text-right" style="width: 25%">入库日期</td>
-                                    <td class="text-left" style="width: 25%">{{ obj.outstocktime }}</td>
+                                    <td class="text-left" style="width: 25%">{{ obj.entrytime }}</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -238,7 +244,7 @@ export default {
         submit() {
             let vm = this;
             this.confirm('确认吗?', function () {
-                vm.getData("inboundorder/submit", {id: vm.obj.id}, function (data) {
+                vm.getData("inboundorder/inStock", {id: vm.obj.id}, function (data) {
                     vm.msg('操作成功');
                     vm.$refs.viewInboundDld.close();
                     vm.loadPage(vm.pageNumber, vm.pageSize);
