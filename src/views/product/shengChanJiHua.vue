@@ -5,6 +5,7 @@
                 <LinkButton iconCls="icon-add" :plain="true" @click="add">添加计划</LinkButton>
                 <LinkButton iconCls="icon-edit" :disabled="!obj.id" :plain="true" @click="edit">编辑</LinkButton>
                 <LinkButton iconCls="icon-edit" :disabled="!obj.id || obj.status>0" :plain="true" @click="release">下达加工单</LinkButton>
+                <LinkButton iconCls="icon-edit" :disabled="!obj.id || obj.purchaserelease" :plain="true" @click="releasePurchaseplan">下达采购计划</LinkButton>
             </Panel>
         </LayoutPanel>
         <LayoutPanel region="center" style="height:100%" :border="false" bodyCls="f-column">
@@ -18,6 +19,7 @@
                 <GridColumn field="number" title="计划单号" align="center" width="240"></GridColumn>
                 <GridColumn field="norm" title="产品规格" align="center" width="120"></GridColumn>
                 <GridColumn field="model" title="产品型号" align="center" width="120"></GridColumn>
+                <GridColumn field="sourcename" title="来源" align="center" width="120"></GridColumn>
                 <GridColumn field="starttime" title="开始日期" align="center" width="120"></GridColumn>
                 <GridColumn field="finishtime" title="计划完成日期" align="center" width="120"></GridColumn>
                 <GridColumn field="deptname" title="生产车间" align="center" width="120"></GridColumn>
@@ -25,9 +27,17 @@
                 <GridColumn field="status" title="加工状态" align="center" width="120">
                     <template slot="body" slot-scope="scope">
                         <div class="item">
-                            <span v-if="scope.row.status===0">新建</span>
-                            <span v-if="scope.row.status===1">已下达</span>
-                            <span v-if="scope.row.status===2">已完工</span>
+                            <span class="c-orange" v-if="scope.row.status===0">新建</span>
+                            <span class="c-blue" v-if="scope.row.status===1">已下达</span>
+                            <span class="c-teal" v-if="scope.row.status===2">已完工</span>
+                        </div>
+                    </template>
+                </GridColumn>
+                 <GridColumn field="purchaserelease" title="采购计划" align="center" width="120">
+                    <template slot="body" slot-scope="scope">
+                        <div class="item">
+                            <span class="c-orange" v-if="!scope.row.purchaserelease">未下达</span>
+                            <span class="c-teal" v-if="scope.row.purchaserelease">已下达</span>
                         </div>
                     </template>
                 </GridColumn>
@@ -66,11 +76,15 @@
                         <label>截止日期</label>
                         <input type="date" v-model="obj.finishtime" class="form-control">
                     </div>
-                    <div class="col-12 p-10">
+                    <div class="col-12 p-10" v-if="obj.source===789">
+                        <label>委外单位</label>
+                        <selectSupplier :input="true" :suppliername="obj.deptname" @selectSupplier="selectSupplier"></selectSupplier>
+                    </div>
+                    <div class="col-12 p-10" v-if="obj.source===787">
                         <label>生产车间</label>
                         <selectOrganization :input="true" :name="obj.deptname" @selectOrganization="selectOrganization"></selectOrganization>
                     </div>
-                    <div class="col-12 p-10">
+                    <div class="col-12 p-10" v-if="obj.source===787">
                         <label>生产人</label>
                         <selectUser :username="obj.workername" :input="true" @selectUser="selectUser" :organizationid="obj.deptid"></selectUser>
                     </div>
@@ -88,6 +102,7 @@
 import selectSaleorder from '@/components/selectSaleorder.vue';
 import selectOrganization from '@/components/selectOrganization.vue';
 import selectUser from '@/components/selectUser.vue';
+import selectSupplier from '@/components/selectSupplier.vue';
 
 export default {
     name: "app",
@@ -101,7 +116,7 @@ export default {
         this.load();
     },
     components: {
-        selectSaleorder, selectOrganization, selectUser
+        selectSaleorder, selectOrganization, selectUser, selectSupplier
     },
     methods: {
         load: function () {
@@ -117,7 +132,7 @@ export default {
             let vm = this;
             this.confirm('导入到生产计划，确认吗?', function () {
                 vm.getData("saleorder/changeProductplan", {id: obj.id}, function (data) {
-
+                    vm.load();
                 })
             })
         },
@@ -130,8 +145,12 @@ export default {
                 deptname: obj.deptname,
                 worker: obj.worker,
                 workername: obj.workername,
-                status:obj.status
+                status: obj.status,
+                sourcename:obj.sourcename,
+                source:obj.source,
+                purchaserelease:obj.purchaserelease
             };
+            console.log(this.obj);
         },
         edit() {
             this.$refs.editPlantimeDlg.open();
@@ -139,28 +158,43 @@ export default {
         saveItem() {
             let vm = this;
             this.getData("productionplan/saveEdit", {
-                id:this.obj.id,
-                starttime:this.obj.starttime,
-                finishtime:this.obj.finishtime,
+                id: this.obj.id,
+                starttime: this.obj.starttime,
+                finishtime: this.obj.finishtime,
                 deptid: vm.obj.deptid,
-                worker: vm.obj.worker
+                worker: vm.obj.worker,
+                external:vm.obj.source === 789
             }, function (data) {
                 vm.$refs.editPlantimeDlg.close();
                 vm.load();
             })
         },
+        selectSupplier(obj){
+            this.$set(this.obj, 'deptid', obj.id);
+            this.$set(this.obj, 'deptname', obj.name);
+        },
         selectOrganization(obj) {
             this.$set(this.obj, 'deptid', obj.id);
             this.$set(this.obj, 'deptname', obj.name);
         },
-        selectUser(obj){
+        selectUser(obj) {
             this.$set(this.obj, 'worker', obj.id);
             this.$set(this.obj, 'workername', obj.username);
         },
-        release(){
+        release() {
             let vm = this;
             this.confirm('下达加工单，确认吗?', function () {
                 vm.getData("productionplan/release", {
+                    id: vm.obj.id
+                }, function (data) {
+                    vm.load();
+                })
+            })
+        },
+        releasePurchaseplan() {
+            let vm = this;
+            this.confirm('下达采购计划，确认吗?', function () {
+                vm.getData("productionplan/purchaseplanRelease", {
                     id: vm.obj.id
                 }, function (data) {
                     vm.load();

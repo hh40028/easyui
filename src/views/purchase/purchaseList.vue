@@ -5,9 +5,7 @@
                 <Panel :bodyStyle="{padding:'8px'}" :border="false">
                     <LinkButton iconCls="icon-add" :plain="true" @click="add">开单</LinkButton>
                     <LinkButton iconCls="icon-ok" :disabled="!obj.id" :plain="true" @click="viewPurchase">查看</LinkButton>
-<!--                    <input class="m-t-5" type="checkbox" v-model="isRedback"-->
-<!--                           @change="loadPage(pageNumber, pageSize)" id="ck">-->
-<!--                    <label for="ck" :class="{'c-red':isRedback}">显示删除合同</label>-->
+                    <LinkButton iconCls="icon-search" :plain="true" @click="viewPurchaseorder">采购订单</LinkButton>
                     <div class="pull-right">
                         <filterList @filterLoad="filter"></filterList>
                     </div>
@@ -69,7 +67,7 @@
                         </div>
                         <div class="col-4 p-t-10 p-l-10 p-r-10">
                             <label>经办人</label>
-                            <selectUser input="true" :username="obj.username" @selectUser="selectUser"></selectUser>
+                            <selectUser input="true" :username="obj.managername" @selectUser="selectUser"></selectUser>
                         </div>
                         <div class="col-4 p-t-10 p-l-10 p-r-10">
                             <label>采购日期</label>
@@ -88,7 +86,7 @@
                                   :data="list"
                                   idField="id">
 
-                            <GridColumn field="name" title="入货仓库" width="150">
+                            <GridColumn field="warehouseid" title="入货仓库" width="150">
                                 <template slot="body" slot-scope="scope">
                                     <div class="item">
                                         <select class="w-100" v-model="scope.row.warehouseid">
@@ -101,22 +99,23 @@
                             <GridColumn field="name" title="商品名称" align="center"></GridColumn>
                             <GridColumn field="norm" title="商品规格" align="center"></GridColumn>
                             <GridColumn field="model" title="商品型号" align="center"></GridColumn>
-                            <GridColumn field="bigpackage" title="商品单位" align="center">
-                                <template slot="body" slot-scope="scope">
-                                    <div class="item">
-                                        <input type="radio" :name="scope.row.commodityid+'group'" :value="false" v-model="scope.row.bigpackage">{{ scope.row.unit }}
-                                        <input v-if="scope.row.bigunit" type="radio" :name="scope.row.commodityid+'group'" :value="true" v-model="scope.row.bigpackage">{{ scope.row.bigunit }}
-                                    </div>
-                                </template>
-                            </GridColumn>
-                            <GridColumn field="unit" title="商品数量" align="center">
+                            <GridColumn field="unit" title="商品单位" align="center"></GridColumn>
+<!--                            <GridColumn field="bigpackage" title="商品单位" align="center">-->
+<!--                                <template slot="body" slot-scope="scope">-->
+<!--                                    <div class="item">-->
+<!--                                        <input type="radio" :name="scope.row.commodityid+'group'" :value="false" v-model="scope.row.bigpackage">{{ scope.row.unit }}-->
+<!--                                        <input v-if="scope.row.bigunit" type="radio" :name="scope.row.commodityid+'group'" :value="true" v-model="scope.row.bigpackage">{{ scope.row.bigunit }}-->
+<!--                                    </div>-->
+<!--                                </template>-->
+<!--                            </GridColumn>-->
+                            <GridColumn field="commoditycount" title="商品数量" align="center">
                                 <template slot="body" slot-scope="scope">
                                     <div class="item">
                                         <input type="number" class="w-100 text-center" v-model="scope.row.commoditycount">
                                     </div>
                                 </template>
                             </GridColumn>
-                            <GridColumn field="unit" title="商品单价" align="center">
+                            <GridColumn field="commodityprice" title="商品单价" align="center">
                                 <template slot="body" slot-scope="scope">
                                     <div class="item">
                                         <input type="number" class="w-100 text-center" v-model="scope.row.commodityprice">
@@ -156,7 +155,7 @@
                 :dialogStyle="{width:'80vW',height:'80vH'}"
                 bodyCls="f-column"
                 :modal="true">
-            <div class="f-full" >
+            <div class="f-full">
                 <purchaseView :id="obj.id"></purchaseView>
             </div>
             <div class="dialog-button text-center">
@@ -165,6 +164,15 @@
                 <LinkButton style="width:80px" @click="redback">删除</LinkButton>
                 <LinkButton style="width:80px" @click="printPDF">打印</LinkButton>
                 <LinkButton style="width:80px" @click="$refs.purchaseViewDlg.close()">关闭</LinkButton>
+            </div>
+        </Dialog>
+        <Dialog ref="viewPurchaseorderDlg" closed
+                :title="'采购订单'"
+                :dialogStyle="{width:'80vw',height:'80vh'}"
+                bodyCls="f-column"
+                :modal="true">
+            <div class="f-full">
+                <selectPurchaseorder ref="purchaseorderCom" @selectPurchaseorder="selectPurchaseorder"></selectPurchaseorder>
             </div>
         </Dialog>
         <selectCommodity ref="selectCommodity" @selectCommodity="selectCommodity"></selectCommodity>
@@ -177,6 +185,7 @@ import selectSupplier from '@/components/selectSupplier.vue';
 import purchaseView from '@/components/purchaseView.vue';
 import selectUser from '@/components/selectUser.vue';
 import filterList from '@/components/filterList.vue';
+import selectPurchaseorder from '@/components/selectPurchaseorder.vue';
 
 export default {
     name: "app",
@@ -191,7 +200,7 @@ export default {
             list: [],
             warehouses: [],
             isRedback: false,
-            // filterString:'',
+            filterString:'',
             timeout: null
         }
     },
@@ -200,7 +209,7 @@ export default {
         this.loadPage(this.pageNumber, this.pageSize);
     },
     components: {
-        selectCommodity, selectUser, selectSupplier, purchaseView, filterList
+        selectCommodity, selectUser, selectSupplier, purchaseView, filterList, selectPurchaseorder
     },
     methods: {
         loadWarehouses: function () {
@@ -344,6 +353,21 @@ export default {
         filter(filterString) {
             this.filterString = filterString;
             this.loadPage(this.pageNumber, this.pageSize);
+        },
+        viewPurchaseorder() {
+            this.$refs.viewPurchaseorderDlg.open();
+        },
+        selectPurchaseorder(obj){
+            let vm = this;
+            this.confirm('从该订单生成采购单，确认吗?', function () {
+                vm.getData("purchaseorder/buildPurchase", {id:obj.id}, function (data) {
+                    console.log(data);
+                    vm.obj=data.obj;
+                    vm.list=data.list;
+                    vm.$refs.viewPurchaseorderDlg.close();
+                    vm.$refs.editPurchaseDlg.open();
+                })
+            })
         }
     }
 }

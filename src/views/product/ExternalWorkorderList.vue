@@ -10,52 +10,24 @@
                 </div>
             </Panel>
         </LayoutPanel>
-        <LayoutPanel v-if="obj.id>0" region="south" style="height:50%;" bodyCls="f-column" :border="false">
+        <LayoutPanel v-if="obj.id>0" region="south" style="height:30%;" bodyCls="f-column" :border="false">
             <Tabs class="f-full">
                 <TabPanel :title="'工序'">
                     <DataGrid :data="productworksequences" class="f-full" :border="false">
                         <GridColumn field="number" title="工序编号" align="center"></GridColumn>
                         <GridColumn field="name" title="工序名称" align="center"></GridColumn>
-                        <GridColumn field="price" title="生产单价" align="center">
-                            <template slot="body" slot-scope="scope">
-                                <div class="item">
-                                    {{ toMoney(scope.row.price, '￥') }}
-                                </div>
-                            </template>
-                        </GridColumn>
+                        <GridColumn field="price" title="生产单价" align="center"></GridColumn>
                         <GridColumn field="productiontime" title="生产时间(分钟)" align="center"></GridColumn>
                     </DataGrid>
                 </TabPanel>
                 <TabPanel :title="'配料'">
-                    <Panel :bodyStyle="{padding:'5px'}">
-                        <LinkButton iconCls="icon-add" :plain="true" @click="editPickinglist">领料</LinkButton>
-                    </Panel>
                     <DataGrid :data="productworksequencechildren" class="f-full" :border="false">
                         <GridColumn field="number" title="配件编号" align="center"></GridColumn>
                         <GridColumn field="name" title="配件名称" align="center"></GridColumn>
                         <GridColumn field="norm" title="配件规格" align="center"></GridColumn>
                         <GridColumn field="model" title="配件型号" align="center"></GridColumn>
-                        <GridColumn field="demandcount" title="需求数量" align="center">
-                            <template slot="body" slot-scope="scope">
-                                <div class="item">
-                                    {{ scope.row.demandcount }} {{ scope.row.unit }}
-                                </div>
-                            </template>
-                        </GridColumn>
-                        <GridColumn field="losscount" title="损耗数量" align="center">
-                            <template slot="body" slot-scope="scope">
-                                <div class="item">
-                                    {{ scope.row.losscount }} {{ scope.row.unit }}
-                                </div>
-                            </template>
-                        </GridColumn>
-                        <GridColumn field="stockcount" title="库存数量" align="center">
-                            <template slot="body" slot-scope="scope">
-                                <div class="item">
-                                    {{ scope.row.stockcount }} {{ scope.row.unit }}
-                                </div>
-                            </template>
-                        </GridColumn>
+                        <GridColumn field="demandcount" title="需求数量" align="center"></GridColumn>
+                        <GridColumn field="losscount" title="损耗数量" align="center"></GridColumn>
                     </DataGrid>
                 </TabPanel>
                 <TabPanel :title="'验收'">
@@ -80,13 +52,13 @@
                     </div>
                     <div class="col-12 p-10" v-if="obj.status>1 && obj.finish">
                         <div class="col-12 p-10">
-                            完成数量：{{ obj.plancount }}
+                            完成数量：{{obj.plancount}}
                         </div>
                         <div class="col-12 p-10">
-                            验收时间：{{ obj.finishtime }}
+                            验收时间：{{obj.finishtime}}
                         </div>
                         <div class="col-12 p-10">
-                            入货仓库：{{ obj.warehousename }}
+                            入货仓库：{{obj.warehousename}}
                         </div>
                     </div>
                 </TabPanel>
@@ -142,26 +114,6 @@
                     </template>
                 </GridColumn>
             </DataGrid>
-            <Dialog ref="editPickinglistDlg" closed
-                    :title="'编辑领料单'"
-                    :dialogStyle="{width:'60vw',height:'60vh'}"
-                    bodyCls="f-column"
-                    :modal="true">
-                <div class="f-full">
-                    <Layout bodyCls="f-column" :border="false">
-                        <LayoutPanel region="north" :border="false">
-                            <div class="title">North Region</div>
-                        </LayoutPanel>
-                        <LayoutPanel region="center" style="height:100%" :border="false">
-                            <div class="title">Center Region</div>
-                        </LayoutPanel>
-                    </Layout>
-                </div>
-                <div class="dialog-button text-center">
-                    <LinkButton style="width:80px">提交</LinkButton>
-                    <LinkButton style="width:80px">关闭</LinkButton>
-                </div>
-            </Dialog>
         </LayoutPanel>
     </Layout>
 </template>
@@ -208,7 +160,7 @@ export default {
         loadPage(pageNumber, pageSize) {
             this.loading = true;
             let vm = this;
-            let url = 'productionplan/getWorkorderQueryList';
+            let url = 'productionplan/getExternalWorkorderQueryList';
             this.$root.getData(url, {
                 limit: pageSize,
                 offset: pageSize * (pageNumber - 1),
@@ -242,12 +194,8 @@ export default {
                 vm.productworksequences = data;
             })
             this.getData("productworksequence/getChildMaps", {productid: this.obj.commodityid}, function (data) {
-                vm.productworksequencechildren = [];
-                data.forEach(function (e) {
-                    e.demandcount *= vm.obj.plancount;
-                    e.losscount *= vm.obj.plancount;
-                    vm.productworksequencechildren.push(e);
-                })
+                vm.productworksequencechildren = data;
+                console.log(data);
             })
         },
         submitInbound() {
@@ -267,9 +215,6 @@ export default {
                     })
                 })
             }
-        },
-        editPickinglist(){
-            this.$refs.editPickinglistDlg.open();
         }
     }
 }
