@@ -35,17 +35,10 @@
                     <GridColumn field="name" title="商品名称" align="center"></GridColumn>
                     <GridColumn field="norm" title="商品规格" align="center"></GridColumn>
                     <GridColumn field="model" title="商品型号" align="center"></GridColumn>
-                    <GridColumn field="bigpackage" title="商品单位" align="center">
-                        <template slot="body" slot-scope="scope">
-                            <div class="item">
-                                {{scope.row.bigpackage?scope.row.unit:scope.row.bigunit}}
-                            </div>
-                        </template>
-                    </GridColumn>
                     <GridColumn field="commoditycount" title="商品数量" align="center">
                         <template slot="body" slot-scope="scope">
                             <div class="item">
-                                {{scope.row.commoditycount|number2}}
+                                {{scope.row.commoditycount|number2}} {{scope.row.unit}}
                             </div>
                         </template>
                     </GridColumn>
@@ -56,7 +49,6 @@
                             </div>
                         </template>
                     </GridColumn>
-                    <GridColumn field="unit" title="商品单位" align="center"></GridColumn>
                     <GridColumn field="amount" title="金额" align="center">
                         <template slot="body" slot-scope="scope">
                             <div class="item">

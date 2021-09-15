@@ -32,7 +32,11 @@ import recePayStatistics from '../views/finance/recePayStatistics.vue'
 import outboundList from '../views/stock/outboundList.vue'
 import shengChanJiHua from '../views/product/shengChanJiHua.vue'
 import workorderList from '../views/product/workorderList.vue'
+import ExternalWorkorderList from '../views/product/ExternalWorkorderList.vue'
 import inboundList from '../views/stock/inboundList.vue'
+import purchaseplan from '../views/purchase/purchaseplan.vue'
+import caiGouDingDan from '../views/purchase/caiGouDingDan.vue'
+import lingLiaoDan from '../views/product/lingLiaoDan.vue'
 
 Vue.use(VueRouter)
 
@@ -71,6 +75,10 @@ const routes = [
   {path: '/shengChanJiHua', name: 'shengChanJiHua', component: shengChanJiHua},
   {path: '/jiaGongDan', name: 'workorderList', component: workorderList},
   {path: '/ruKuDan', name: 'inboundList', component: inboundList},
+  {path: '/weiWaiJiaGongDan', name: 'ExternalWorkorderList', component: ExternalWorkorderList},
+  {path: '/purchaseplan', name: 'purchaseplan', component: purchaseplan},
+  {path: '/caiGouDingDan', name: 'caiGouDingDan', component: caiGouDingDan},
+  {path: '/lingLiaoDan', name: 'lingLiaoDan', component: lingLiaoDan},
 ]
 
 const router = new VueRouter({

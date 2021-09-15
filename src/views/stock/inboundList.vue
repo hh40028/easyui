@@ -35,8 +35,8 @@
                 <GridColumn field="submit" title="入库状态" width="120" align="center">
                     <template slot="body" slot-scope="scope">
                         <div class="item">
-                            <span v-if="!scope.row.submit">未入库</span>
-                            <span v-if="scope.row.submit">已入库</span>
+                            <span class="c-orange" v-if="!scope.row.submit">未入库</span>
+                            <span class="c-teal" v-if="scope.row.submit">已入库</span>
                         </div>
                     </template>
                 </GridColumn>
@@ -108,7 +108,7 @@
                                 <GridColumn field="inprice" title="入库单价" align="center">
                                     <template slot="body" slot-scope="scope">
                                         <div class="item">
-                                            {{ toMoney(scope.row.outprice) }}
+                                            {{ toMoney(scope.row.inprice) }}
                                         </div>
                                     </template>
                                 </GridColumn>
@@ -155,7 +155,7 @@ export default {
     data() {
         return {
             total: 0,
-            pageSize: 25,
+            pageSize: 15,
             pageNumber: 1,
             data: [],
             loading: false,

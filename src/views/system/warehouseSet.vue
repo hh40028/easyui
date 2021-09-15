@@ -5,7 +5,7 @@
                 <p class="text-center" v-if="!warehouse.id">选择左面仓库显示货位树</p>
                 <Panel :bodyStyle="{padding:'5px'}" :border="false" v-if="warehouse.id>0">
                     <LinkButton iconCls="icon-add" :plain="true" @click="addCargolocation">下级货位</LinkButton>
-                    <LinkButton iconCls="icon-edit" :plain="true" @click="editCargolocation">编辑</LinkButton>
+<!--                    <LinkButton iconCls="icon-edit" :plain="true" @click="editCargolocation">编辑</LinkButton>-->
                     <LinkButton iconCls="icon-remove" :plain="true" @click="deleteCargolocation">删除</LinkButton>
 <!--                    <LinkButton iconCls="icon-reload" :plain="true" @click="reloadCargolocation">刷新</LinkButton>-->
                 </Panel>
@@ -69,13 +69,17 @@
 
         <Dialog ref="editCargolocationDlg" closed
                 :title="'编辑货位'"
-                :dialogStyle="{width:'300px',height:'180px'}"
+                :dialogStyle="{width:'300px'}"
                 bodyCls="f-column"
                 :modal="true">
             <div class="f-full">
                 <div class="col-12 p-15">
                     <label>货位编码</label>
-                    <input type="text" v-model="selectCargolocationObj.number" class="form-control">
+                    <input type="text" v-model="cargolocation.number" class="form-control">
+                </div>
+                <div class="col-12 p-15">
+                    <label>货位名称</label>
+                    <input type="text" v-model="cargolocation.name" class="form-control">
                 </div>
             </div>
             <div class="dialog-button">
@@ -165,12 +169,16 @@ export default {
             })
         },
         selectCargolocation(obj){
-            this.selectCargolocationObj=obj;
+            this.selectCargolocationObj= obj;
         },
         editCargolocation(){
             if(this.selectCargolocationObj.id>0){
                 this.cargolocation={
-                    pid:this.selectCargolocationObj.id
+                    id:this.selectCargolocationObj.id,
+                    pid:this.selectCargolocationObj.pid,
+                    number:this.selectCargolocationObj.number,
+                    name:this.selectCargolocationObj.name,
+                    version:this.selectCargolocationObj.version
                 }
                 this.$refs.editCargolocationDlg.open();
             }else{
@@ -189,7 +197,7 @@ export default {
         },
         saveCargolocation(){
             let vm = this;
-            this.getData("cargolocation/updateNumber", {id:this.selectCargolocationObj.id,number:this.selectCargolocationObj.number}, function (data) {
+            this.getData("cargolocation/save", this.cargolocation, function (data) {
                 vm.$refs.editCargolocationDlg.close();
                 vm.selectObj(vm.warehouse);
             })

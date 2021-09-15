@@ -64,8 +64,8 @@
                 :draggable="true" :resizable="true"
                 title="编辑" :modal="true" closed :dialogStyle="{height:'80vh',width:'80%'}">
             <div class="f-full" style="overflow:auto">
-                <Layout bodyCls="f-column">
-                    <LayoutPanel region="north">
+                <Layout bodyCls="f-column" :border="false">
+                    <LayoutPanel region="north" :border="false">
                         <Panel :bodyStyle="{padding:'5px',border:0}">
                             <LinkButton iconCls="icon-add" :plain="true" @click="selectChildCommodityOpen">选择子商品</LinkButton>
                             <LinkButton v-if="selectRow" iconCls="icon-remove" :plain="true" @click="removeChild()">移除</LinkButton>
@@ -74,7 +74,7 @@
                     <LayoutPanel region="west" style="width:120px;">
                         <Tree :data="tree" @selectionChange="selectionTree($event)"></Tree>
                     </LayoutPanel>
-                    <LayoutPanel region="center">
+                    <LayoutPanel region="center" :border="false">
                         <DataGrid :columnResizing="true"
                                   class="f-full"
                                   :data="children" @editEnd="editEnd($event)"
@@ -101,7 +101,7 @@
                 bodyCls="f-column"
                 :modal="true">
             <div class="f-full">
-                <Layout bodyCls="f-column" style="height:calc(80vh - 40px)">
+                <Layout bodyCls="f-column" style="height:calc(80vh - 40px)" :border="false">
                     <LayoutPanel region="east" style="width:50%;">
                         <LinkButton iconCls="icon-ok" :plain="true" @click="selectAccessories">选择配件</LinkButton>
                         <!--                        <LinkButton iconCls="icon-remove" :plain="true" :disabled="!accessories.id" @click="deleteAccessories">删除配件</LinkButton>-->

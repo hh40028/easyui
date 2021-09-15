@@ -1,6 +1,6 @@
 <template>
     <div>
-        <input v-if="input" type="text" v-model="username" readonly @click="openDlg" class="form-control">
+        <input v-if="input" type="text" v-model="getUsername" readonly @click="openDlg" class="form-control">
         <Dialog ref="selectUserDlg" closed bodyCls="f-column"
                 :title="'选择'"
                 :dialogStyle="{width:'50%',height:'50vh'}"
@@ -44,6 +44,11 @@ export default {
     created: function () {
         if(!this.input){
             this.loadPage(this.pageNumber, this.pageSize);
+        }
+    },
+    computed:{
+        getUsername:function (){
+            return this.username;
         }
     },
     methods: {
