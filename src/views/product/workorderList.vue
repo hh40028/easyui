@@ -28,7 +28,7 @@
                 </TabPanel>
                 <TabPanel :title="'配料'">
                     <Panel :bodyStyle="{padding:'5px'}">
-                        <LinkButton iconCls="icon-add" :plain="true" @click="editPickinglist">领料</LinkButton>
+                        <LinkButton iconCls="icon-ok" :plain="true" @click="editPickinglist">领料单</LinkButton>
                     </Panel>
                     <DataGrid :data="productworksequencechildren" class="f-full" :border="false">
                         <GridColumn field="number" title="配件编号" align="center"></GridColumn>
@@ -125,6 +125,14 @@
                         </div>
                     </template>
                 </GridColumn>
+                <GridColumn field="outstock" title="领料" align="center" width="100">
+                    <template slot="body" slot-scope="scope">
+                        <div class="item">
+                            <span v-if="!scope.row.outstock">未领料</span>
+                            <span class="c-teal" v-if="scope.row.outstock">已领料</span>
+                        </div>
+                    </template>
+                </GridColumn>
                 <GridColumn field="plancount" title="计划数量" align="center" width="100"></GridColumn>
                 <GridColumn field="finishcount" title="当前完成数量" align="center" width="100"></GridColumn>
                 <GridColumn field="unitcost" title="完成比例" align="center" width="100">
@@ -143,23 +151,56 @@
                 </GridColumn>
             </DataGrid>
             <Dialog ref="editPickinglistDlg" closed
-                    :title="'编辑领料单'"
+                    :title="'领料单'"
                     :dialogStyle="{width:'60vw',height:'60vh'}"
                     bodyCls="f-column"
                     :modal="true">
                 <div class="f-full">
                     <Layout bodyCls="f-column" :border="false">
                         <LayoutPanel region="north" :border="false">
-                            <div class="title">North Region</div>
+                            <table border="1" class="w-100">
+                                <tbody>
+                                <tr>
+                                    <td class="text-right">单据号</td>
+                                    <td class="text-left">{{ pickinglistObj.number }}</td>
+                                    <td class="text-right">申请人</td>
+                                    <td class="text-left">{{ pickinglistObj.applicantname }}</td>
+                                    <td class="text-right">申请时间</td>
+                                    <td class="text-left">{{ pickinglistObj.applicationtime }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </LayoutPanel>
-                        <LayoutPanel region="center" style="height:100%" :border="false">
-                            <div class="title">Center Region</div>
+                        <LayoutPanel region="center" style="height:100%;padding-top: 10px" :border="false">
+                            <div style="position: absolute;top:10px;right:10px;z-index: 10000000" v-if="pickinglistObj.outstock">
+                                <img src="../../assets/images/chuku.png" style="height:50px">
+                            </div>
+                            <DataGrid v-if="pickinglistObj.children" :data="pickinglistObj.children" class="f-full" :border="false">
+                                <GridColumn title="序号" width="40" align="center">
+                                    <template slot="body" slot-scope="scope">
+                                        <div class="item">
+                                            {{ scope.rowIndex + 1 }}
+                                        </div>
+                                    </template>
+                                </GridColumn>
+                                <GridColumn field="number" title="商品编号" align="center"></GridColumn>
+                                <GridColumn field="name" title="商品名称" align="center"></GridColumn>
+                                <GridColumn field="norm" title="商品规格" align="center"></GridColumn>
+                                <GridColumn field="model" title="商品型号" align="center"></GridColumn>
+                                <GridColumn field="count" title="商品数量" align="center">
+                                    <template slot="body" slot-scope="scope">
+                                        <div class="item">
+                                            {{ scope.row.count }} {{ scope.row.unit }}
+                                        </div>
+                                    </template>
+                                </GridColumn>
+                            </DataGrid>
                         </LayoutPanel>
                     </Layout>
                 </div>
                 <div class="dialog-button text-center">
-                    <LinkButton style="width:80px">提交</LinkButton>
-                    <LinkButton style="width:80px">关闭</LinkButton>
+                    <LinkButton style="width:80px" @click="submit" v-if="!pickinglistObj.submit">提交</LinkButton>
+                    <LinkButton style="width:80px" @click="$refs.editPickinglistDlg.close()">关闭</LinkButton>
                 </div>
             </Dialog>
         </LayoutPanel>
@@ -186,7 +227,8 @@ export default {
             ],
             status: 1,
             productworksequences: [],
-            productworksequencechildren: []
+            productworksequencechildren: [],
+            pickinglistObj: {}
         }
     },
     created: function () {
@@ -268,8 +310,21 @@ export default {
                 })
             }
         },
-        editPickinglist(){
-            this.$refs.editPickinglistDlg.open();
+        editPickinglist() {
+            let vm = this;
+            this.getData("pickinglist/buildPickinglist", {id: this.obj.id}, function (data) {
+                vm.pickinglistObj = data;
+                vm.$refs.editPickinglistDlg.open();
+            });
+        },
+        submit(){
+            let vm = this;
+            this.confirm('确认吗?', function () {
+                vm.getData("pickinglist/submit", {id: vm.pickinglistObj.id}, function (data) {
+                    vm.msg('操作成功');
+                    vm.$refs.editPickinglistDlg.close();
+                })
+            })
         }
     }
 }

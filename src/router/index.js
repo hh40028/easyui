@@ -36,6 +36,7 @@ import ExternalWorkorderList from '../views/product/ExternalWorkorderList.vue'
 import inboundList from '../views/stock/inboundList.vue'
 import purchaseplan from '../views/purchase/purchaseplan.vue'
 import caiGouDingDan from '../views/purchase/caiGouDingDan.vue'
+import lingLiaoDan from '../views/product/lingLiaoDan.vue'
 
 Vue.use(VueRouter)
 
@@ -77,6 +78,7 @@ const routes = [
   {path: '/weiWaiJiaGongDan', name: 'ExternalWorkorderList', component: ExternalWorkorderList},
   {path: '/purchaseplan', name: 'purchaseplan', component: purchaseplan},
   {path: '/caiGouDingDan', name: 'caiGouDingDan', component: caiGouDingDan},
+  {path: '/lingLiaoDan', name: 'lingLiaoDan', component: lingLiaoDan},
 ]
 
 const router = new VueRouter({
