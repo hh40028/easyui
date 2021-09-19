@@ -1,6 +1,6 @@
 <template>
-    <Layout bodyCls="f-column" style="height:calc(100vh - 52px);">
-        <LayoutPanel region="north" style="height:50px;">
+    <Layout bodyCls="f-column" :border="false">
+        <LayoutPanel region="north" :border="false">
             <Panel :bodyStyle="{padding:'5px'}" :border="false">
                 <LinkButton iconCls="icon-add" :plain="true" @click="add">新增</LinkButton>
                 <LinkButton iconCls="icon-edit" :disabled="!equipment.id" :plain="true" @click="edit">编辑</LinkButton>
@@ -8,8 +8,8 @@
                 <LinkButton iconCls="icon-cut" :disabled="!equipment.id" :plain="true">养护</LinkButton>
             </Panel>
         </LayoutPanel>
-        <LayoutPanel region="center" style="height:100%">
-            <DataGrid style="height: calc(100vh - 100px)"
+        <LayoutPanel bodyCls="f-column" region="center" style="height:100%" :border="false">
+            <DataGrid
                       :border="false"
                       class="f-full"
                       :columnResizing="true"
@@ -65,10 +65,10 @@
                     bodyCls="f-column"
                     :modal="true">
                 <div class="f-full">
-                    <Layout bodyCls="f-column" style="height: calc(80vh - 81px)">
+                    <Layout bodyCls="f-column" :border="false">
                         <LayoutPanel region="east" style="width:20vw;" :border="false">
                             <Layout bodyCls="f-column" style="height: calc(80vh - 83px)">
-                                <LayoutPanel region="north" style="height:250px" :split="true">
+                                <LayoutPanel region="north" style="height:250px" :split="true" :border="false">
                                     <Panel class="f-full" title="图片" :bodyStyle="{padding:'5px'}" :panelStyle="{width:'100%',minWidth:'100px'}" :border="false">
                                         <LinkButton iconCls="icon-add" :plain="true" @click="up('photo')">上传图片</LinkButton>
                                     </Panel>
@@ -76,8 +76,8 @@
                                         <img title="点击删除" @click="removePhoto(file)" class="w-100" :src="$root.basePath+'/common/getImage?filename='+file.filename">
                                     </div>
                                 </LayoutPanel>
-                                <LayoutPanel bodyCls="f-column" region="center" style="height:100%">
-                                    <Panel class="f-full" title="文档" :bodyStyle="{padding:'10px'}" style="height:200px">
+                                <LayoutPanel bodyCls="f-column" region="center" style="height:100%" :border="false">
+                                    <Panel class="f-full" title="文档" :bodyStyle="{padding:'10px'}" style="height:200px" :border="false">
                                         <LinkButton iconCls="icon-add" :plain="true" @click="up('attachment')">上传文档</LinkButton>
                                         <a v-for="file in files" :key="file.id" v-if="file.type==='attachment'" @click="download(file.filename)">
                                             <div class="f-14 c-blue" style="overflow: hidden; text-overflow:ellipsis; white-space: nowrap;">{{ file.sourcename }}

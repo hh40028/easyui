@@ -1,19 +1,17 @@
 <template>
-    <Layout bodyCls="f-column" style="height:calc(100vh - 52px);" :border="false">
-        <LayoutPanel region="north">
-            <div class="col-6 p-5">
+    <Layout bodyCls="f-column" :border="false">
+        <LayoutPanel region="north" :border="false">
+            <div class="col-12 p-5">
                 <input type="radio" name="type" v-model="type" :value="'1'" @change="load" id="a1"><label for="a1" class="m-r-5">资产类</label>
                 <input type="radio" name="type" v-model="type" :value="'2'" @change="load" id="a2"><label for="a2" class="m-r-5">负债类</label>
                 <input type="radio" name="type" v-model="type" :value="'4'" @change="load" id="a3"><label for="a3" class="m-r-5">权益类</label>
                 <input type="radio" name="type" v-model="type" :value="'5'" @change="load" id="a4"><label for="a4" class="m-r-5">成本类</label>
                 <input type="radio" name="type" v-model="type" :value="'6'" @change="load" id="a5"><label for="a5" class="m-r-5">损益类</label>
-            </div>
-            <div class="col-6 p-5">
-                <LinkButton :disabled="!obj.id" iconCls="icon-edit" :plain="true" @click="edit">编辑</LinkButton>
+                <LinkButton class="m-l-30" :disabled="!obj.id" iconCls="icon-edit" :plain="true" @click="edit">编辑</LinkButton>
                 <LinkButton :disabled="!obj.id" iconCls="icon-add" :plain="true" @click="addChild">增加下级科目</LinkButton>
             </div>
         </LayoutPanel>
-        <LayoutPanel region="center" style="height:100%" bodyCls="f-column">
+        <LayoutPanel region="center" style="height:100%" bodyCls="f-column" :border="false">
             <TreeGrid
                       class="f-full"
                       :border="false"
@@ -135,15 +133,17 @@ export default {
         addChild() {
             let vm = this;
             let maxNumber = 0;
-            this.obj.children.forEach(function (e) {
-                if (e.number.substr(0, vm.obj.number.length) === vm.obj.number) {
-                    if (parseInt(e.number) > maxNumber) {
-                        maxNumber = e.number;
+            if(this.obj.children){
+                this.obj.children.forEach(function (e) {
+                    if (e.number.substr(0, vm.obj.number.length) === vm.obj.number) {
+                        if (parseInt(e.number) > maxNumber) {
+                            maxNumber = e.number;
+                        }
                     }
-                }
-            })
-            if ((maxNumber + '').length === this.obj.number.length) {
-                maxNumber = maxNumber + '01';
+                })
+            }
+            if (maxNumber===0) {
+                maxNumber = this.obj.number + '01';
             } else {
                 ++maxNumber;
             }

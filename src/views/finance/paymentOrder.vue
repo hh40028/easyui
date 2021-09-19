@@ -1,6 +1,6 @@
 <template>
-    <Layout bodyCls="f-column" style="height: calc(100vh - 50px)">
-        <LayoutPanel region="north" style="height:50px;">
+    <Layout bodyCls="f-column" :border="false">
+        <LayoutPanel region="north" :border="false">
             <div class="col-6">
                 <Panel :bodyStyle="{padding:'8px'}" :border="false">
                     <LinkButton iconCls="icon-add" :plain="true" @click="add">新增</LinkButton>
@@ -11,7 +11,7 @@
                 <input type="text" v-model="filterString" style="width: 30%" class="form-control" placeholder="过滤...">
             </div>
         </LayoutPanel>
-        <LayoutPanel region="center" style="height:100%">
+        <LayoutPanel region="center" style="height:100%" :border="false">
             <DataGrid style="height: calc(100vh - 101px)"
                       :border="false"
                       class="f-full"

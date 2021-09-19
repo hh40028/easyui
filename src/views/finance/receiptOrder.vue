@@ -1,6 +1,6 @@
 <template>
-    <Layout bodyCls="f-column" style="height: calc(100vh - 50px)" :border="false">
-        <LayoutPanel region="north" style="height:50px;">
+    <Layout bodyCls="f-column" :border="false">
+        <LayoutPanel region="north" :border="false">
             <div class="col-6">
                 <Panel :bodyStyle="{padding:'8px'}" :border="false">
                     <LinkButton iconCls="icon-add" :plain="true" @click="add">新增</LinkButton>
@@ -18,7 +18,7 @@
                 </SearchBox>
             </div>
         </LayoutPanel>
-        <LayoutPanel region="center" style="height:100%" bodyCls="f-column">
+        <LayoutPanel region="center" style="height:100%" bodyCls="f-column" :border="false">
             <DataGrid
                       :border="false"
                       class="f-full"

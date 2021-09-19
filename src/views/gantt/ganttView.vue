@@ -1,7 +1,26 @@
 <template>
-  <div class="container">
-    <gantt ref="gantt" class="left-container" :tasks="tasks"></gantt>
-  </div>
+    <Layout bodyCls="f-column" :border="false">
+        <LayoutPanel region="north" :border="false">
+            <Panel :bodyStyle="{padding:'5px'}">
+                <div class="pull-right">
+                    <LinkButton :plain="true" @click="$router.push('shengChanJiHua')">生产计划</LinkButton>
+                </div>
+<!--                <ButtonGroup selectionMode="single">-->
+<!--                    <LinkButton :toggle="true" :selected="true">Add</LinkButton>-->
+<!--                    <LinkButton :toggle="true" :selected="true">Add</LinkButton>-->
+<!--                    <LinkButton :toggle="true" :selected="true">Add</LinkButton>-->
+<!--                    <LinkButton :toggle="true" :selected="true">Add</LinkButton>-->
+<!--                    <LinkButton :toggle="true" :selected="true">Add</LinkButton>-->
+<!--                </ButtonGroup>-->
+            </Panel>
+        </LayoutPanel>
+        <!--        <LayoutPanel region="south" style="height:30%;" :border="false">-->
+        <!--            <div class="title">South Region</div>-->
+        <!--        </LayoutPanel>-->
+        <LayoutPanel region="center" style="height:100%" :border="false">
+            <gantt ref="gantt" class="left-container" :tasks="tasks"></gantt>
+        </LayoutPanel>
+    </Layout>
 </template>
 
 <script>
@@ -9,57 +28,43 @@
 import Gantt from '@/components/Gantt.vue';
 
 export default {
-  name: "ganttView",
-  components: {Gantt},
-  data () {
-    return {
-      tasks: {
-        data: [],
-        links: []
-      },
-    }
-  },
-
-  created(){
-    this.readTaskList();
-  },
-
-  mounted:function (){
-    this.reloadGantt();
-  },
-
-  methods:{
-    readTaskList() {
-      let vm = this;
-
-      this.getData("productionplan/getGanttView", {}, function (data) {
-        vm.tasks.data =data;
-        vm.reloadGantt();
-      },function (){
-        console.log("gettree is failur!");
-      })
+    name: "ganttView",
+    components: {Gantt},
+    data() {
+        return {
+            tasks: {
+                data: [],
+                links: []
+            },
+        }
     },
-
-    reloadGantt(){
-      this.$refs.gantt.reload();
+    created() {
+        this.readTaskList();
+    },
+    mounted: function () {
+        this.reloadGantt();
+    },
+    methods: {
+        readTaskList() {
+            let vm = this;
+            this.getData("productionplan/getGanttView", {}, function (data) {
+                vm.tasks.data = data;
+                console.log(data);
+                vm.reloadGantt();
+            })
+        },
+        reloadGantt() {
+            this.$refs.gantt.reload();
+        }
     }
-  }
 }
 </script>
 
 <style scoped>
-html, body {
-  height: 500px;
-  margin: 0;
-  padding: 0;
-}
-.container {
-  height: 500px;
-  width: 100%;
-}
+
 .left-container {
-  overflow: hidden;
-  position: relative;
-  height: 500px;
+    overflow: hidden;
+    position: relative;
+    height: 100%;
 }
 </style>

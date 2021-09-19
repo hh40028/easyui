@@ -1,19 +1,19 @@
 <template>
-    <Layout bodyCls="f-column" style="height:calc(100vh - 50px)">
-        <LayoutPanel region="west" style="width:320px;">
-            <Panel title="角色列表" :bodyStyle="{padding:'10px'}" class="f-full" :border="false">
+    <Layout bodyCls="f-column" :border="false">
+        <LayoutPanel region="west" style="width:25%;" :border="false">
+            <Panel title="角色列表" :bodyStyle="{padding:'0'}" class="f-full" :border="false">
                 <Tree :data="roles" @selectionChange="selection($event)"></Tree>
             </Panel>
         </LayoutPanel>
         <LayoutPanel region="center" style="height:100%">
-            <Panel :bodyStyle="{padding:'5px'}" v-show="selectRole.id>0">
+            <Panel :bodyStyle="{padding:'5px'}" v-show="selectRole.id>0" :border="false">
                 <LinkButton iconCls="icon-add" :plain="true" @click="add">新增</LinkButton>
                 <LinkButton iconCls="icon-remove" :disabled="!obj.id" :plain="true" @click="removeObj">删除</LinkButton>
             </Panel>
-            <DataGrid class="f-full" :data="userroles" style="height:calc(100vh - 100px)"  v-show="selectRole.id>0"
+            <DataGrid class="f-full" :data="userroles"  v-show="selectRole.id>0"
                       selectionMode="single" :border="false"
                       @selectionChange="selectObj($event)">
-                <GridColumn field="username" title="用户姓名" width="100"></GridColumn>
+                <GridColumn field="username" title="用户姓名" width="100" align="center"></GridColumn>
                 <GridColumn field="loginname" title="登录名"></GridColumn>
             </DataGrid>
             <selectUser ref="selectUserCom" username="" @selectUser="selectUser"></selectUser>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Layout bodyCls="f-column" style="height:calc(100vh - 52px);" :border="false">
+        <Layout bodyCls="f-column" :border="false">
             <LayoutPanel region="north" :border="false">
                 <Panel :bodyStyle="{padding:'8px'}" :border="false">
                     <LinkButton iconCls="icon-add" :plain="true" @click="add">新增</LinkButton>
@@ -13,7 +13,7 @@
                 </Panel>
             </LayoutPanel>
             <LayoutPanel region="center" style="height:100%" bodyCls="f-column" :border="false">
-                <TreeGrid
+                <TreeGrid ref="tgList"
                           class="f-full"
                           :border="false"
                           :striped="true"
@@ -204,6 +204,8 @@ export default {
             });
         },
         add() {
+            this.node={};
+            this.$refs.tgList.clearSelections();
             this.$refs.selectCommodityCom.load();
             this.children = [];
         },

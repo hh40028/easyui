@@ -2,10 +2,13 @@
     <Layout style="height: calc(100vh - 52px)" bodyCls="f-column" :border="false">
         <LayoutPanel region="north" :border="false">
             <Panel :bodyStyle="{padding:'5px'}" :border="false">
+                <div class="pull-right">
+                    <LinkButton :plain="true" @click="$router.push('ganttView')">生产甘特图</LinkButton>
+                </div>
                 <LinkButton iconCls="icon-add" :plain="true" @click="add">添加计划</LinkButton>
                 <LinkButton iconCls="icon-edit" :disabled="!obj.id" :plain="true" @click="edit">编辑</LinkButton>
-                <LinkButton iconCls="icon-edit" :disabled="!obj.id || obj.status>0" :plain="true" @click="release">下达加工单</LinkButton>
-                <LinkButton iconCls="icon-edit" :disabled="!obj.id || obj.purchaserelease" :plain="true" @click="releasePurchaseplan">下达采购计划</LinkButton>
+                <LinkButton iconCls="icon-ok" :disabled="!obj.id || obj.status>0" :plain="true" @click="release">下达加工单</LinkButton>
+                <LinkButton iconCls="icon-ok" :disabled="!obj.id || obj.purchaserelease" :plain="true" @click="releasePurchaseplan">下达采购计划</LinkButton>
             </Panel>
         </LayoutPanel>
         <LayoutPanel region="center" style="height:100%" :border="false" bodyCls="f-column">

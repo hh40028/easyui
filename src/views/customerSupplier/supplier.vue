@@ -1,6 +1,6 @@
 <template>
-    <Layout bodyCls="f-column" style="height:calc(100vh - 52px);" :border="false">
-        <LayoutPanel region="north" style="height:50px;">
+    <Layout bodyCls="f-column" :border="false">
+        <LayoutPanel region="north" :border="false">
             <div class="col-3 p-5">
                 <LinkButton iconCls="icon-add" :plain="true" @click="add">新建</LinkButton>
                 <LinkButton iconCls="icon-edit" :disabled="!obj.id" :plain="true" @click="edit">编辑</LinkButton>
@@ -11,12 +11,12 @@
                 <input type="text" class="form-control" v-model="filterString" placeholder="过滤...">
             </div>
         </LayoutPanel>
-        <LayoutPanel region="center" style="height:100%" :border="false">
-            <DataGrid style="height: calc(100vh - 99px)"
+        <LayoutPanel bodyCls="f-column" region="center" style="height:100%" :border="false">
+            <DataGrid
                       class="f-full"
                       :columnResizing="true"
-                      :lazy="true"
                       :data="data"
+                      :border="false"
                       :total="total"
                       selectionMode="single"
                       :loading="loading"

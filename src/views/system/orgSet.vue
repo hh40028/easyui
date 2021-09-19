@@ -1,6 +1,6 @@
 <template>
-    <Layout bodyCls="f-column" style="height:calc(100vh - 52px);" :border="false">
-        <LayoutPanel region="north" style="height:50px;">
+    <Layout bodyCls="f-column" :border="false">
+        <LayoutPanel region="north" :border="false">
             <div class="col-3 p-5">
                 <LinkButton iconCls="icon-add" :plain="true" @click="add">新增</LinkButton>
                 <LinkButton iconCls="icon-edit" :disabled="!orgObj" :plain="true" @click="edit">编辑</LinkButton>
@@ -19,25 +19,16 @@
                 </SearchBox>
             </div>
         </LayoutPanel>
-        <LayoutPanel region="center" style="height:100%" bodyCls="f-column">
+        <LayoutPanel region="center" style="height:100%" bodyCls="f-column" :border="false">
             <TreeGrid class="f-full"
                       :border="false"
                       :striped="true"
-                      :columnResizing="true"
                       @rowDblClick="edit"
                       :data="list" @selectionChange="selectObj($event)"
                       idField="id" treeField="name">
-                <GridColumnGroup :frozen="true">
-                    <GridHeaderRow>
-                        <GridColumn field="name" title="部门名称" width="150"></GridColumn>
-                    </GridHeaderRow>
-                </GridColumnGroup>
-                <GridColumnGroup>
-                    <GridHeaderRow>
-                        <GridColumn field="area" title="所在区域" align="center" width="130"></GridColumn>
-                        <GridColumn field="address" title="办公地址" align="center" width="120"></GridColumn>
-                    </GridHeaderRow>
-                </GridColumnGroup>
+                <GridColumn field="name" title="部门名称" width="150"></GridColumn>
+                <GridColumn field="area" title="所在区域" align="center" width="130"></GridColumn>
+                <GridColumn field="address" title="办公地址" align="center" width="120"></GridColumn>
             </TreeGrid>
             <Dialog ref="dlgEdit" closed
                     :title="'编辑部门'"

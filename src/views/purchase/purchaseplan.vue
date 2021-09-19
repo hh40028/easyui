@@ -1,8 +1,9 @@
 <template>
-    <Layout style="height:calc(100vh - 52px);" :border="false">
+    <Layout :border="false">
         <LayoutPanel region="north" :border="false">
             <Panel :bodyStyle="{padding:'5px'}" :border="false">
                 <LinkButton iconCls="icon-add" :plain="true" @click="buildPurchaseOrder">生成采购订单</LinkButton>
+                <LinkButton iconCls="icon-remove" :plain="true" @click="remove">删除</LinkButton>
             </Panel>
         </LayoutPanel>
         <LayoutPanel region="center" style="height:100%" :border="false">
@@ -18,10 +19,17 @@
                 <GridColumn field="name" title="商品名称" align="center"></GridColumn>
                 <GridColumn field="norm" title="商品规格" align="center"></GridColumn>
                 <GridColumn field="model" title="商品型号" align="center"></GridColumn>
-                <GridColumn field="count" title="采购数量" align="center">
+                <GridColumn field="count" title="采购数量" align="right">
                     <template slot="body" slot-scope="scope">
                         <div class="item">
                             {{ scope.row.count }}{{ ' ' + scope.row.unit }}
+                        </div>
+                    </template>
+                </GridColumn>
+                <GridColumn field="stockcount" title="库存数量" align="right">
+                    <template slot="body" slot-scope="scope">
+                        <div class="item">
+                            {{ scope.row.stockcount }}{{ ' ' + scope.row.unit }}
                         </div>
                     </template>
                 </GridColumn>
@@ -193,7 +201,6 @@ export default {
                     rows: JSON.stringify(vm.purchaseOrder.list)
                 }, function (data) {
                     vm.purchaseOrder.list = data;
-                    console.log(vm.purchaseOrder.list);
                     vm.$refs.editPurchaseOrderDlg.open();
                 })
             }
@@ -207,19 +214,19 @@ export default {
         },
         submit() {
             let vm = this;
-            let err='';
-            if(!this.purchaseOrder.supplierid){
-                err+='请选择供应商<br>';
+            let err = '';
+            if (!this.purchaseOrder.supplierid) {
+                err += '请选择供应商<br>';
             }
-            if(!this.purchaseOrder.endtime){
-                err+='请选择到货日期<br>';
+            if (!this.purchaseOrder.endtime) {
+                err += '请选择到货日期<br>';
             }
-            if(!this.purchaseOrder.list.length){
-                err+='没有任何商品<br>';
+            if (!this.purchaseOrder.list.length) {
+                err += '没有任何商品<br>';
             }
-            if(err.length>0){
+            if (err.length > 0) {
                 this.alert(err);
-            }else{
+            } else {
                 this.confirm('确认吗?', function () {
                     vm.getData("purchaseorder/submit", {
                         obj: JSON.stringify(vm.purchaseOrder),
@@ -230,6 +237,16 @@ export default {
                     })
                 })
             }
+        },
+        remove() {
+            let vm = this;
+            this.confirm('删除所选采购计划，确认吗?', function () {
+                vm.getData("purchaseplan/delete", {
+                    selection: JSON.stringify(vm.selection)
+                }, function (data) {
+                    vm.load();
+                })
+            })
         }
     }
 }

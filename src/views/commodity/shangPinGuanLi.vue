@@ -87,11 +87,11 @@
                 </div>
                 <div class="col-4 p-t-15 p-l-15 p-r-15 ">
                     <label>采购单价</label><br>
-                    <input type="text" class="form-control" v-model="obj.purchaseprice">
+                    <input type="number" class="form-control" v-model="obj.purchaseprice">
                 </div>
                 <div class="col-4 p-t-15 p-l-15 p-r-15 ">
                     <label>销售单价</label><br>
-                    <input type="text" class="form-control" v-model="obj.saleprice">
+                    <input type="number" class="form-control" v-model="obj.saleprice">
                 </div>
                 <div class="col-4 p-t-15 p-l-15 p-r-15 ">
                     <label>用途</label><br>
@@ -204,6 +204,7 @@ export default {
             this.obj = this.clone(obj);
         },
         add() {
+            this.obj={};
             this.$refs.d1.open();
         },
         edit() {
@@ -222,7 +223,6 @@ export default {
             let vm = this;
             this.getData("commodity/save", this.obj, function (data) {
                 vm.$refs.d1.close();
-                // vm.data = [];
                 vm.loadPage(vm.pageNumber, vm.pageSize);
             })
         },

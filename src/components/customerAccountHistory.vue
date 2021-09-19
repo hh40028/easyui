@@ -1,17 +1,14 @@
 <template>
-    <Layout bodyCls="f-column" style="height:calc(60vh - 40px)" :border="false">
-        <LayoutPanel region="north" style="height:50px;">
+    <Layout bodyCls="f-column" :border="false">
+        <LayoutPanel region="north" :border="false">
             <Panel :bodyStyle="{padding:'8px'}" :border="false">
                 <LinkButton :disabled="!obj.id" :plain="false">关联单据</LinkButton>
             </Panel>
         </LayoutPanel>
-        <LayoutPanel region="center" style="height:100%" :border="false">
+        <LayoutPanel bodyCls="f-column" region="center" style="height:100%" :border="false">
             <DataGrid
-                style="height:100%"
                 :border="false"
                 class="f-full"
-                :virtualScroll="true"
-                :lazy="true"
                 :data="data"
                 :total="total"
                 selectionMode="single"

@@ -37,6 +37,9 @@ import inboundList from '../views/stock/inboundList.vue'
 import purchaseplan from '../views/purchase/purchaseplan.vue'
 import caiGouDingDan from '../views/purchase/caiGouDingDan.vue'
 import lingLiaoDan from '../views/product/lingLiaoDan.vue'
+import ganttView from '../views/gantt/ganttView.vue'
+import dictSet from '../views/system/dictSet.vue'
+import yanShouDan from '../views/product/yanShouDan.vue'
 
 Vue.use(VueRouter)
 
@@ -79,6 +82,9 @@ const routes = [
   {path: '/purchaseplan', name: 'purchaseplan', component: purchaseplan},
   {path: '/caiGouDingDan', name: 'caiGouDingDan', component: caiGouDingDan},
   {path: '/lingLiaoDan', name: 'lingLiaoDan', component: lingLiaoDan},
+  {path: '/ganttView', name: 'ganttView', component: ganttView},
+  {path: '/dictSet', name: 'dictSet', component: dictSet},
+  {path: '/yanShouDan', name: 'yanShouDan', component: yanShouDan},
 ]
 
 const router = new VueRouter({

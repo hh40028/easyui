@@ -172,8 +172,8 @@ Vue.prototype.clone = function (obj) {
 new Vue({
     data() {
         return {
-            basePath: 'http://192.168.3.105:8080/',
-            // basePath: 'http://localhost:8080/',
+            // basePath: 'http://erpserver.fuservice.com/',
+            basePath: 'http://localhost:8080/',
             uesrObj: undefined,
             menu: {text: '首页'},
             twomenu: {},

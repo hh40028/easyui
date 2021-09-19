@@ -55,22 +55,28 @@
                             <template slot="body" slot-scope="scope">
                                 <div class="item" :class="{'c-teal':scope.row.stockcount>=scope.row.salecount,
                                 'c-red':scope.row.stockcount<scope.row.salecount}">
-                                    {{scope.row.stockcount}} ({{ scope.row.unit }})
+                                    {{ scope.row.stockcount }} ({{ scope.row.unit }})
                                 </div>
                             </template>
                         </GridColumn>
                         <GridColumn field="salecount" title="订货数量" width="120" align="center">
                             <template slot="body" slot-scope="scope">
                                 <div class="item">
-                                    {{scope.row.salecount}} ({{ scope.row.bigpackage ? scope.row.bigunit : scope.row.unit }})
+                                    {{ scope.row.salecount }} ({{ scope.row.bigpackage ? scope.row.bigunit : scope.row.unit }})
                                 </div>
                             </template>
                         </GridColumn>
-                        <GridColumn field="saleprice" title="订货金额" width="120" align="center"></GridColumn>
+                        <GridColumn field="saleprice" title="订货金额" width="120" align="center">
+                            <template slot="body" slot-scope="scope">
+                                <div class="item">
+                                    {{ toMoney(scope.row.saleprice, '￥') }}
+                                </div>
+                            </template>
+                        </GridColumn>
                         <GridColumn field="username" title="金额" width="100" align="center">
                             <template slot="body" slot-scope="scope">
                                 <div class="item">
-                                    {{ scope.row.salecount * scope.row.saleprice|number2 }}
+                                    {{ toMoney(scope.row.salecount * scope.row.saleprice , '￥') }}
                                 </div>
                             </template>
                         </GridColumn>

@@ -1,11 +1,11 @@
 <template>
     <div>
-        <Layout style="width:100%;height:calc(100vh - 50px);">
-            <LayoutPanel region="west" style="width:50%;">
+        <Layout bodyCls="f-column" :border="false">
+            <LayoutPanel region="west" style="width:50%;" :border="false">
                 <div class="title">信息</div>
             </LayoutPanel>
-            <LayoutPanel region="center" style="height:100%">
-                <Panel title="待办任务" :collapsible="false" :border="false" class="f-full" :bodyStyle="{padding:'0px',height:'calc(100vH - 50)'}">
+            <LayoutPanel region="center" style="height:100%" :border="false">
+                <Panel title="待办任务" :collapsible="false" class="f-full" :bodyStyle="{padding:'0px',height:'calc(100vH - 50)'}">
                     <DataGrid style="height:calc(100vh - 84px)" :title="'待办任务'"
                               :border="false"
                               class="f-full"

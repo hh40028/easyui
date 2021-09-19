@@ -3,6 +3,11 @@
         <LayoutPanel region="north" :border="false">
             <Panel :bodyStyle="{padding:'8px'}" :border="false">
                 <LinkButton :disabled="!obj.id" iconCls="icon-ok" :plain="true" @click="view">查看</LinkButton>
+
+                <ButtonGroup selectionMode="single" class="m-l-30">
+                    <LinkButton :toggle="true" :selected="!submit" @click="changeStatus(false)">未入库</LinkButton>
+                    <LinkButton :toggle="true" :selected="submit" @click="changeStatus(true)">已入库</LinkButton>
+                </ButtonGroup>
                 <div class="pull-right">
                     <filterList @filterLoad="filter"></filterList>
                 </div>
@@ -17,6 +22,7 @@
                       :total="total"
                       selectionMode="single"
                       :loading="loading"
+                      :rowCss="getRowCss"
                       @rowDblClick="view"
                       @selectionChange="selectObj($event)"
                       :pageNumber="pageNumber"
@@ -90,7 +96,7 @@
                                 <GridColumn title="序号" width="40" align="center">
                                     <template slot="body" slot-scope="scope">
                                         <div class="item">
-                                            {{scope.rowIndex+1}}
+                                            {{ scope.rowIndex + 1 }}
                                         </div>
                                     </template>
                                 </GridColumn>
@@ -164,7 +170,8 @@ export default {
             warehouses: [],
             isRedback: false,
             timeout: null,
-            inboundchildObj: {}
+            inboundchildObj: {},
+            submit:false
         }
     },
     created: function () {
@@ -191,7 +198,8 @@ export default {
                 offset: pageSize * (pageNumber - 1),
                 sort: "id",
                 direction: "desc",
-                filterString: this.filterString
+                filterString: this.filterString,
+                submit: this.submit
             }, function (data) {
                 vm.total = data.total;
                 vm.data = [];
@@ -254,7 +262,17 @@ export default {
         filter(filterString) {
             this.filterString = filterString;
             this.loadPage(this.pageNumber, this.pageSize);
-        }
+        },
+        changeStatus(flag){
+            this.submit=flag;
+            this.loadPage(this.pageNumber, this.pageSize);
+        },
+        getRowCss(row) {
+            if (row.redback) {
+                return {background: "#f2dede"};
+            }
+            return null;
+        },
     }
 }
 </script>

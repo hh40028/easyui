@@ -1,5 +1,5 @@
 <template>
-    <Layout bodyCls="f-column" style="height:calc(100vh - 52px);">
+    <Layout bodyCls="f-column">
         <LayoutPanel region="north" style="height:50px;">
             <div class="col-9">
                 <Panel :bodyStyle="{paddingTop:'8px'}" :border="false">

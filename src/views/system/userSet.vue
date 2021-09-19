@@ -1,10 +1,10 @@
 <template>
-    <Layout bodyCls="f-column" style="height:calc(100vh - 52px);" :border="false">
-        <LayoutPanel region="west" style="width:280px;">
+    <Layout bodyCls="f-column" :border="false">
+        <LayoutPanel region="west" style="width:280px;" :border="false">
             <Tree :data="list" @selectionChange="selectOrg($event)"></Tree>
         </LayoutPanel>
         <LayoutPanel region="center" style="height:100%" bodyCls="f-column">
-            <Panel :bodyStyle="{padding:'5px'}">
+            <Panel :bodyStyle="{padding:'5px'}" :border="false">
                 <LinkButton iconCls="icon-add" :plain="true" @click="add">新增</LinkButton>
                 <LinkButton iconCls="icon-edit" :plain="true" @click="edit">编辑</LinkButton>
                 <LinkButton iconCls="icon-remove" :plain="true" @click="moveOrg">调离</LinkButton>
