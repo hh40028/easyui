@@ -13,7 +13,7 @@
         <LayoutPanel v-if="obj.id>0" region="south" style="height:50%;" bodyCls="f-column" :border="false">
             <Tabs class="f-full">
                 <TabPanel :title="'工序'">
-                    <DataGrid :data="productworksequences" class="f-full" :border="false">
+                    <DataGrid :data="planworksequences" class="f-full" :border="false">
                         <GridColumn field="number" title="工序编号" align="center"></GridColumn>
                         <GridColumn field="name" title="工序名称" align="center"></GridColumn>
                         <GridColumn field="price" title="生产单价" align="center">
@@ -24,12 +24,26 @@
                             </template>
                         </GridColumn>
                         <GridColumn field="productiontime" title="生产时间(分钟)" align="center"></GridColumn>
+                        <GridColumn field="productioncount" title="计划数量" align="center"></GridColumn>
+                        <GridColumn field="releasecount" title="分派数量" align="center">
+                            <template slot="body" slot-scope="scope">
+                                <div class="item">{{ !scope.row.releasecount ? 0 : scope.row.releasecount }}
+                                </div>
+                            </template>
+                        </GridColumn>
+                        <GridColumn field="finishcount" title="完成数量" align="center"></GridColumn>
+                        <GridColumn field="content" title="工序说明" align="left" width="40%"></GridColumn>
+                        <GridColumn title="工序分派" align="center" width="80">
+                            <template slot="body" slot-scope="scope">
+                                <div class="item">
+                                    <div v-if="scope.row.releasecount>=scope.row.productioncount">已分派</div>
+                                    <div v-if="scope.row.releasecount<scope.row.productioncount" class="c-blue" @click="transfer(scope.row)">分派</div>
+                                </div>
+                            </template>
+                        </GridColumn>
                     </DataGrid>
                 </TabPanel>
-                <TabPanel :title="'配料'">
-                    <Panel :bodyStyle="{padding:'5px'}">
-                        <LinkButton iconCls="icon-ok" :plain="true" @click="editPickinglist">领料单</LinkButton>
-                    </Panel>
+                <TabPanel :title="'配料表'">
                     <DataGrid :data="productworksequencechildren" class="f-full" :border="false">
                         <GridColumn field="number" title="配件编号" align="center"></GridColumn>
                         <GridColumn field="name" title="配件名称" align="center"></GridColumn>
@@ -53,6 +67,26 @@
                             <template slot="body" slot-scope="scope">
                                 <div class="item">
                                     {{ scope.row.stockcount }} {{ scope.row.unit }}
+                                </div>
+                            </template>
+                        </GridColumn>
+                    </DataGrid>
+                </TabPanel>
+                <TabPanel :title="'领料单'">
+                    <Panel :bodyStyle="{padding:'5px'}">
+                        <LinkButton iconCls="icon-add" :plain="true" @click="editPickinglist">领料</LinkButton>
+                        <LinkButton iconCls="icon-ok" :plain="true" :disabled="!pickinglistObj.id" @click="viewPickinglist">查看</LinkButton>
+                    </Panel>
+                    <DataGrid :data="pickinglist"
+                              selectionMode="single"
+                              @selectionChange="selectPickinglistObj($event)" class="f-full" :border="false">
+                        <GridColumn field="number" title="领料单编号" align="center"></GridColumn>
+                        <GridColumn field="applicantname" title="申请人" align="center"></GridColumn>
+                        <GridColumn field="applicationtime" title="申请时间" align="center"></GridColumn>
+                        <GridColumn field="outstock" title="出库" align="center">
+                            <template slot="body" slot-scope="scope">
+                                <div class="item" :class="{'c-teal':scope.row.outstock}">
+                                    {{ scope.row.outstock ? "已出库" : "未出库" }}
                                 </div>
                             </template>
                         </GridColumn>
@@ -157,6 +191,48 @@
                     :modal="true">
                 <div class="f-full">
                     <Layout bodyCls="f-column" :border="false">
+                        <LayoutPanel region="center" style="height:100%" :border="false">
+                            <div style="position: absolute;top:10px;right:10px;z-index: 10000000" v-if="pickinglistObj.outstock">
+                                <img src="../../assets/images/chuku.png" style="height:50px">
+                            </div>
+                            <DataGrid v-if="pickinglistObj.children"
+                                      :clickToEdit="true" selectionMode="cell" editMode="cell"
+                                      :data="pickinglistObj.children" class="f-full" :border="false">
+                                <GridColumn title="序号" width="40" align="center">
+                                    <template slot="body" slot-scope="scope">
+                                        <div class="item">
+                                            {{ scope.rowIndex + 1 }}
+                                        </div>
+                                    </template>
+                                </GridColumn>
+                                <GridColumn field="number" title="商品编号" align="center"></GridColumn>
+                                <GridColumn field="name" title="商品名称" align="center"></GridColumn>
+                                <GridColumn field="norm" title="商品规格" align="center"></GridColumn>
+                                <GridColumn field="model" title="商品型号" align="center"></GridColumn>
+                                <GridColumn field="count" title="商品数量" align="center" :editable="true">
+                                    <template slot="body" slot-scope="scope">
+                                        <div class="item">
+                                            {{ scope.row.count }} {{ scope.row.unit }}
+                                        </div>
+                                    </template>
+                                </GridColumn>
+                            </DataGrid>
+                        </LayoutPanel>
+                    </Layout>
+                </div>
+                <div class="dialog-button text-center">
+                    <LinkButton style="width:80px" @click="openSelectCommodity">选择商品</LinkButton>
+                    <LinkButton style="width:80px" @click="submit" v-if="!pickinglistObj.submit">提交</LinkButton>
+                    <LinkButton style="width:80px" @click="$refs.editPickinglistDlg.close()">关闭</LinkButton>
+                </div>
+            </Dialog>
+            <Dialog ref="viewPickinglistDlg" closed
+                    :title="'领料单'"
+                    :dialogStyle="{width:'60vw',height:'60vh'}"
+                    bodyCls="f-column"
+                    :modal="true">
+                <div class="f-full">
+                    <Layout bodyCls="f-column" :border="false">
                         <LayoutPanel region="north" :border="false">
                             <table border="1" class="w-100">
                                 <tbody>
@@ -171,11 +247,12 @@
                                 </tbody>
                             </table>
                         </LayoutPanel>
-                        <LayoutPanel region="center" style="height:100%;padding-top: 10px" :border="false">
+                        <LayoutPanel region="center" style="height:100%" :border="false">
                             <div style="position: absolute;top:10px;right:10px;z-index: 10000000" v-if="pickinglistObj.outstock">
                                 <img src="../../assets/images/chuku.png" style="height:50px">
                             </div>
-                            <DataGrid v-if="pickinglistObj.children" :data="pickinglistObj.children" class="f-full" :border="false">
+                            <DataGrid v-if="pickinglistObj.children"
+                                      :data="pickinglistObj.children" class="f-full" :border="false">
                                 <GridColumn title="序号" width="40" align="center">
                                     <template slot="body" slot-scope="scope">
                                         <div class="item">
@@ -194,20 +271,73 @@
                                         </div>
                                     </template>
                                 </GridColumn>
+                                <GridColumn field="price" title="出库成本" align="center" :editable="true">
+                                    <template slot="body" slot-scope="scope">
+                                        <div class="item">
+                                            {{ toMoney(scope.row.price, '￥') }}
+                                        </div>
+                                    </template>
+                                </GridColumn>
+                                <GridColumn field="warehousename" title="出货仓库" align="center"></GridColumn>
+                                <GridColumn field="cargolocationnumber" title="出货货位" align="center"></GridColumn>
                             </DataGrid>
                         </LayoutPanel>
                     </Layout>
                 </div>
                 <div class="dialog-button text-center">
-                    <LinkButton style="width:80px" @click="submit" v-if="!pickinglistObj.submit">提交</LinkButton>
-                    <LinkButton style="width:80px" @click="$refs.editPickinglistDlg.close()">关闭</LinkButton>
+                    <LinkButton style="width:80px" @click="$refs.viewPickinglistDlg.close()">关闭</LinkButton>
                 </div>
             </Dialog>
+            <Dialog ref="editTransferDlg" closed
+                    :title="'工序移交'"
+                    :dialogStyle="{width:'600px'}"
+                    bodyCls="f-column"
+                    :modal="true">
+                <div class="f-full">
+                    <div class="col-6 p-10">
+                        <label>移交部门</label>
+                        <selectOrganization :input="true" :name="transferObj.deptname" @selectOrganization="selectOrganization"></selectOrganization>
+                    </div>
+                    <div class="col-6 p-10">
+                        <label>移交员工</label>
+                        <selectUser :organizationid="transferObj.deptid" :input="true" :username="transferObj.operatorname" @selectUser="selectUser"></selectUser>
+                    </div>
+                    <div class="col-6 p-10">
+                        <label>当前工序</label>
+                        <input type="text" class="form-control" readonly v-model="transferObj.finishprocessname">
+                    </div>
+                    <div class="col-6 p-10">
+                        <label>移交数量</label>
+                        <input type="number" class="form-control" v-model="transferObj.receiptquantity" :max="transferObj.maxCount">
+                    </div>
+                    <div class="col-6 p-10">
+                        <label>开始时间</label>
+                        <input type="date" class="form-control" v-model="transferObj.starttime">
+                    </div>
+                    <div class="col-6 p-10">
+                        <label>完成时间</label>
+                        <input type="date" class="form-control" v-model="transferObj.finishtime">
+                    </div>
+                    <div class="col-12 p-10">
+                        <label>备注</label>
+                        <textarea rows="3" class="form-control" v-model="transferObj.remark" style="height: 50px"></textarea>
+                    </div>
+                </div>
+                <div class="dialog-button text-center">
+                    <LinkButton style="width:80px" @click="saveTransferObj">确定</LinkButton>
+                    <LinkButton style="width:80px" @click="$refs.editTransferDlg.close()">取消</LinkButton>
+                </div>
+            </Dialog>
+            <selectCommodity ref="selectCommodityCom" @selectCommodity="selectCommodity"></selectCommodity>
         </LayoutPanel>
     </Layout>
 </template>
 
 <script>
+import selectOrganization from '@/components/selectOrganization.vue';
+import selectUser from "@/components/selectUser";
+import selectCommodity from "@/components/selectCommodity.vue";
+
 export default {
     name: "app",
     data() {
@@ -226,14 +356,20 @@ export default {
                 {status: 2, title: '完工'}
             ],
             status: 1,
-            productworksequences: [],
+            planworksequences: [],
             productworksequencechildren: [],
-            pickinglistObj: {}
+            pickinglistObj: {},
+            worksequenceObj: {},
+            transferObj: {},
+            pickinglist: []
         }
     },
     created: function () {
         this.loadWarehouses();
         this.loadPage(this.pageNumber, this.pageSize);
+    },
+    components: {
+        selectUser, selectOrganization, selectCommodity
     },
     methods: {
         loadWarehouses() {
@@ -272,6 +408,7 @@ export default {
             console.log(obj);
             this.obj = this.clone(obj);
             this.loadWorksequence();
+            this.loadPickingList();
         },
         changeStatus(status) {
             this.obj = {};
@@ -280,8 +417,14 @@ export default {
         },
         loadWorksequence() {
             let vm = this;
-            this.getData("productworksequence/getMaps", {productid: this.obj.commodityid}, function (data) {
-                vm.productworksequences = data;
+            this.getData("planworksequence/getMaps", {planid: this.obj.id}, function (data) {
+                vm.planworksequences = [];
+                data.forEach(function (e) {
+                    if (!e.releasecount) {
+                        vm.$set(e, 'releasecount', 0);
+                    }
+                    vm.planworksequences.push(e);
+                })
             })
             this.getData("productworksequence/getChildMaps", {productid: this.obj.commodityid}, function (data) {
                 vm.productworksequencechildren = [];
@@ -311,19 +454,85 @@ export default {
             }
         },
         editPickinglist() {
-            let vm = this;
-            this.getData("pickinglist/buildPickinglist", {id: this.obj.id}, function (data) {
-                vm.pickinglistObj = data;
-                vm.$refs.editPickinglistDlg.open();
+            this.pickinglistObj = {
+                children: []
+            }
+            this.$refs.editPickinglistDlg.open();
+            // let vm = this;
+            // this.getData("pickinglist/buildPickinglist", {id: this.obj.id}, function (data) {
+            //     vm.pickinglistObj = data;
+            //     vm.$refs.editPickinglistDlg.open();
+            // });
+        },
+        selectCommodity(obj) {
+            this.pickinglistObj.children.push({
+                commodityid: obj.id,
+                number: obj.number,
+                name: obj.name,
+                norm: obj.norm,
+                model: obj.model,
+                unit: obj.unit,
+                count: 0
             });
         },
-        submit(){
+        openSelectCommodity() {
+            this.$refs.selectCommodityCom.load();
+        },
+        submit() {
             let vm = this;
             this.confirm('确认吗?', function () {
-                vm.getData("pickinglist/submit", {id: vm.pickinglistObj.id}, function (data) {
+                vm.getData("pickinglist/submit", {
+                    planid: vm.obj.id,
+                    rows: JSON.stringify(vm.pickinglistObj.children)
+                }, function (data) {
                     vm.msg('操作成功');
                     vm.$refs.editPickinglistDlg.close();
+                    vm.loadPickingList();
                 })
+            })
+        },
+        loadPickingList() {
+            let vm = this;
+            this.getData("pickinglist/getMaps", {planid: this.obj.id}, function (data) {
+                vm.pickinglist = data;
+            })
+        },
+        transfer(obj) {
+            this.worksequenceObj = obj;
+            this.transferObj = {
+                planworksequenceid: obj.id,
+                finishprocess: obj.id,
+                finishprocessname: obj.name,
+                maxCount: obj.productioncount - obj.releasecount
+            }
+            console.log(obj);
+            this.$refs.editTransferDlg.open();
+        },
+        selectOrganization(obj) {
+            this.$set(this.transferObj, 'deptid', obj.id);
+            this.$set(this.transferObj, 'deptname', obj.name);
+        },
+        selectUser(obj) {
+            this.$set(this.transferObj, 'operatorid', obj.id);
+            this.$set(this.transferObj, 'operatorname', obj.username);
+        },
+        saveTransferObj() {
+            let vm = this;
+            this.confirm('确认吗?', function () {
+                vm.getData("worksequencetransfer/save", vm.transferObj, function (data) {
+                    vm.$refs.editTransferDlg.close();
+                    vm.loadWorksequence();
+                })
+            })
+        },
+        selectPickinglistObj(obj){
+            this.pickinglistObj=obj;
+        },
+        viewPickinglist(){
+            let vm = this;
+            this.getData("pickinglist/getMapByPlanid", {id:this.pickinglistObj.id}, function (data) {
+                vm.pickinglistObj=data;
+                vm.$refs.viewPickinglistDlg.open();
             })
         }
     }

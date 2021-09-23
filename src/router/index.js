@@ -40,6 +40,7 @@ import lingLiaoDan from '../views/product/lingLiaoDan.vue'
 import ganttView from '../views/gantt/ganttView.vue'
 import dictSet from '../views/system/dictSet.vue'
 import yanShouDan from '../views/product/yanShouDan.vue'
+import gongXuYiJiaoDan from '../views/product/gongXuYiJiaoDan.vue'
 
 Vue.use(VueRouter)
 
@@ -85,6 +86,7 @@ const routes = [
   {path: '/ganttView', name: 'ganttView', component: ganttView},
   {path: '/dictSet', name: 'dictSet', component: dictSet},
   {path: '/yanShouDan', name: 'yanShouDan', component: yanShouDan},
+  {path: '/gongXuYiJiaoDan', name: 'gongXuYiJiaoDan', component: gongXuYiJiaoDan},
 ]
 
 const router = new VueRouter({
