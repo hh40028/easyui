@@ -16,14 +16,20 @@
                     <DataGrid :data="planworksequences" class="f-full" :border="false">
                         <GridColumn field="number" title="工序编号" align="center"></GridColumn>
                         <GridColumn field="name" title="工序名称" align="center"></GridColumn>
-                        <GridColumn field="price" title="生产单价" align="center">
+                        <GridColumn field="price" title="生产单价" align="right">
                             <template slot="body" slot-scope="scope">
                                 <div class="item">
                                     {{ toMoney(scope.row.price, '￥') }}
                                 </div>
                             </template>
                         </GridColumn>
-                        <GridColumn field="productiontime" title="生产时间(分钟)" align="center"></GridColumn>
+                        <GridColumn field="productiontime" title="生产时间" align="right">
+                            <template slot="body" slot-scope="scope">
+                                <div class="item">
+                                    {{ scope.row.productiontime }}分钟
+                                </div>
+                            </template>
+                        </GridColumn>
                         <GridColumn field="productioncount" title="计划数量" align="center"></GridColumn>
                         <GridColumn field="releasecount" title="分派数量" align="center">
                             <template slot="body" slot-scope="scope">
@@ -285,6 +291,7 @@
                     </Layout>
                 </div>
                 <div class="dialog-button text-center">
+                    <LinkButton style="width:80px" v-if="!pickinglistObj.outstock" @click="removePickinglist">删除</LinkButton>
                     <LinkButton style="width:80px" @click="$refs.viewPickinglistDlg.close()">关闭</LinkButton>
                 </div>
             </Dialog>
@@ -483,10 +490,21 @@ export default {
             this.confirm('确认吗?', function () {
                 vm.getData("pickinglist/submit", {
                     planid: vm.obj.id,
-                    rows: JSON.stringify(vm.pickinglistObj.children)
+                    obj: JSON.stringify(vm.pickinglistObj)
                 }, function (data) {
                     vm.msg('操作成功');
                     vm.$refs.editPickinglistDlg.close();
+                    vm.pickinglistObj={};
+                    vm.loadPickingList();
+                })
+            })
+        },
+        removePickinglist(){
+            let vm = this;
+            this.confirm('确认吗?', function () {
+                vm.getData("pickinglist/delete", {id:vm.pickinglistObj.id}, function (data) {
+                    vm.$refs.viewPickinglistDlg.close();
+                    vm.pickinglistObj={};
                     vm.loadPickingList();
                 })
             })
@@ -527,6 +545,7 @@ export default {
         },
         selectPickinglistObj(obj){
             this.pickinglistObj=obj;
+            console.log(obj);
         },
         viewPickinglist(){
             let vm = this;

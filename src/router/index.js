@@ -41,6 +41,8 @@ import ganttView from '../views/gantt/ganttView.vue'
 import dictSet from '../views/system/dictSet.vue'
 import yanShouDan from '../views/product/yanShouDan.vue'
 import gongXuYiJiaoDan from '../views/product/gongXuYiJiaoDan.vue'
+import productionInboundList from '../views/stock/productionInboundList.vue'
+import calendarSet from '../views/system/calendarSet.vue'
 
 Vue.use(VueRouter)
 
@@ -87,6 +89,8 @@ const routes = [
   {path: '/dictSet', name: 'dictSet', component: dictSet},
   {path: '/yanShouDan', name: 'yanShouDan', component: yanShouDan},
   {path: '/gongXuYiJiaoDan', name: 'gongXuYiJiaoDan', component: gongXuYiJiaoDan},
+  {path: '/shengChanRuKu', name: 'productionInboundList', component: productionInboundList},
+  {path: '/calendarSet', name: 'calendarSet', component: calendarSet},
 ]
 
 const router = new VueRouter({

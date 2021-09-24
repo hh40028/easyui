@@ -1,37 +1,35 @@
 <template>
-    <div>
-        <Layout style="width:100vw;height:100vh" :border="false" bodyCls="f-column">
-            <LayoutPanel region="north" style="height:50px;" :border="false" :bodyStyle="{backgroundColor: 'rgba(0,0,0,0.02)'}">
-                <div class="text-left col-4">
-                    <div style="font-size: 20px;font-weight: 700;padding:10px">P3ERP</div>
-                </div>
-                <div class="title col-4 f-16">{{ $root.menu.text }}<span v-show="$root.twomenu.id>0">－</span>{{ $root.twomenu.text }}</div>
-                <div class="col-4">
-                    <div style="float: right" class="text-right" v-if="$root.userObj">
-                        <div style="float: right;" class="m-r-10 title c-orange" v-if="$root.userObj" @click="logout">注销</div>
-                        <div style="float: right;" class="m-r-20 title">用户({{ $root.userObj.username }})</div>
-                        <div style="float: right;" class="m-r-20 title">
-                            <div class="c-black" @click="$router.push('index')" :class="{'c-red':$root.taskcount>0}">
-                                待办
-                            </div>
+    <Layout style="width:100vw;height:100vh" :border="false" bodyCls="f-column">
+        <LayoutPanel region="north" :border="false" :bodyStyle="{backgroundColor: 'rgba(0,0,0,0.02)'}">
+            <div class="text-left col-4">
+                <div style="font-size: 20px;font-weight: 700;padding:10px">P3ERP</div>
+            </div>
+            <div class="title col-4 f-16">{{ $root.menu.text }}<span v-show="$root.twomenu.id>0">－</span>{{ $root.twomenu.text }}</div>
+            <div class="col-4">
+                <div style="float: right" class="text-right" v-if="$root.userObj">
+                    <div style="float: right;" class="m-r-10 title c-orange" v-if="$root.userObj" @click="logout">注销</div>
+                    <div style="float: right;" class="m-r-20 title">用户({{ $root.userObj.username }})</div>
+                    <div style="float: right;" class="m-r-20 title">
+                        <div class="c-black" @click="$router.push('index')" :class="{'c-red':$root.taskcount>0}">
+                            待办
                         </div>
                     </div>
                 </div>
-            </LayoutPanel>
-            <LayoutPanel region="west" style="width:70px;height: calc(100vh - 80);overflow-y: auto;"
-                         :border="false" :bodyStyle="{backgroundColor: 'rgba(0,0,0,0.02)'}">
-                <div v-for="menu in menus" :key="menu.id" @click="showNav(menu)" class="text-center"
-                     :class="{'select-menu':$root.menu.id===menu.id}">
-                    <img :src="menu.icon" style="margin: 5px 5px 0 5px;width:35px">
-                    <div style="text-align: center;margin-bottom: 10px;padding-bottom: 10px;font-size: 14px">{{ menu.text }}</div>
-                </div>
-            </LayoutPanel>
-            <LayoutPanel region="center" style="height: 100%" :border="true">
-                <router-view/>
-            </LayoutPanel>
-        </Layout>
-        <login></login>
-    </div>
+            </div>
+        </LayoutPanel>
+        <LayoutPanel region="west" style="width:70px;height: calc(100vh - 80);overflow-y: auto;"
+                     :border="false" :bodyStyle="{backgroundColor: 'rgba(0,0,0,0.02)'}">
+            <div v-for="menu in menus" :key="menu.id" @click="showNav(menu)" class="text-center"
+                 :class="{'select-menu':$root.menu.id===menu.id}">
+                <img :src="menu.icon" style="margin: 5px 5px 0 5px;width:35px">
+                <div style="text-align: center;margin-bottom: 10px;padding-bottom: 10px;font-size: 14px">{{ menu.text }}</div>
+            </div>
+        </LayoutPanel>
+        <LayoutPanel region="center" style="height: 100%" :border="true">
+            <router-view/>
+            <login></login>
+        </LayoutPanel>
+    </Layout>
 </template>
 
 <script>

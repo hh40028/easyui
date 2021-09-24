@@ -11,7 +11,7 @@
             </Panel>
         </LayoutPanel>
         <LayoutPanel region="center" style="height:100%" bodyCls="f-column" :border="false">
-            <Panel :bodyStyle="{padding:'0'}" class="f-full" bodyCls="f-column">
+            <Panel :bodyStyle="{padding:'0'}" class="f-full" bodyCls="f-column" :border="false">
                 <DataGrid :border="false"
                           class="f-full"
                           :columnResizing="true"
