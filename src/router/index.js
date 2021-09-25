@@ -43,6 +43,7 @@ import yanShouDan from '../views/product/yanShouDan.vue'
 import gongXuYiJiaoDan from '../views/product/gongXuYiJiaoDan.vue'
 import productionInboundList from '../views/stock/productionInboundList.vue'
 import calendarSet from '../views/system/calendarSet.vue'
+import tuiLiaoDan from '../views/product/tuiLiaoDan.vue'
 
 Vue.use(VueRouter)
 
@@ -91,6 +92,7 @@ const routes = [
   {path: '/gongXuYiJiaoDan', name: 'gongXuYiJiaoDan', component: gongXuYiJiaoDan},
   {path: '/shengChanRuKu', name: 'productionInboundList', component: productionInboundList},
   {path: '/calendarSet', name: 'calendarSet', component: calendarSet},
+  {path: '/tuiLiaoDan', name: 'tuiLiaoDan', component: tuiLiaoDan},
 ]
 
 const router = new VueRouter({

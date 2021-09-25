@@ -98,6 +98,26 @@
                         </GridColumn>
                     </DataGrid>
                 </TabPanel>
+                <TabPanel :title="'退料单'">
+                    <Panel :bodyStyle="{padding:'5px'}">
+                        <LinkButton iconCls="icon-add" :plain="true" @click="editReturnorder">退料</LinkButton>
+                        <LinkButton iconCls="icon-ok" :plain="true" :disabled="!returnorderObj.id" @click="viewReturnorder">查看</LinkButton>
+                    </Panel>
+                    <DataGrid :data="returnorderList"
+                              selectionMode="single"
+                              @selectionChange="selectReturnorderObj($event)" class="f-full" :border="false">
+                        <GridColumn field="number" title="退料单编号" align="center"></GridColumn>
+                        <GridColumn field="applicantname" title="申请人" align="center"></GridColumn>
+                        <GridColumn field="applicationtime" title="申请时间" align="center"></GridColumn>
+                        <GridColumn field="instock" title="入库" align="center">
+                            <template slot="body" slot-scope="scope">
+                                <div class="item" :class="{'c-teal':scope.row.instock}">
+                                    {{ scope.row.instock ? "已入库" : "未入库" }}
+                                </div>
+                            </template>
+                        </GridColumn>
+                    </DataGrid>
+                </TabPanel>
                 <TabPanel :title="'验收'">
                     <div class="col-12 p-10" v-if="obj.status<2 && !obj.finish">
                         <div class="col-4 p-10">
@@ -335,6 +355,117 @@
                     <LinkButton style="width:80px" @click="$refs.editTransferDlg.close()">取消</LinkButton>
                 </div>
             </Dialog>
+            <Dialog ref="editRetureOrderDlg" closed
+                    :title="'退料单'"
+                    :dialogStyle="{width:'60vw',height:'60vh'}"
+                    bodyCls="f-column"
+                    :modal="true">
+                <div class="f-full">
+                    <Layout bodyCls="f-column" :border="false">
+                        <LayoutPanel region="center" style="height:100%" :border="false">
+                            <div style="position: absolute;top:10px;right:10px;z-index: 10000000" v-if="returnorderObj.outstock">
+                                <img src="../../assets/images/chuku.png" style="height:50px">
+                            </div>
+                            <DataGrid
+                                :data="pickinglistchildList" class="f-full" :border="false">
+                                <GridColumn title="序号" width="40" align="center">
+                                    <template slot="body" slot-scope="scope">
+                                        <div class="item">
+                                            {{ scope.rowIndex + 1 }}
+                                        </div>
+                                    </template>
+                                </GridColumn>
+                                <GridColumn field="number" title="商品编号" align="center"></GridColumn>
+                                <GridColumn field="name" title="商品名称" align="center"></GridColumn>
+                                <GridColumn field="norm" title="商品规格" align="center"></GridColumn>
+                                <GridColumn field="model" title="商品型号" align="center"></GridColumn>
+                                <GridColumn field="count" title="领料数量" align="center">
+                                    <template slot="body" slot-scope="scope">
+                                        <div class="item">
+                                            {{ scope.row.count }} {{ scope.row.unit }}
+                                        </div>
+                                    </template>
+                                </GridColumn>
+                                <GridColumn field="count" title="退料数量" align="center">
+                                    <template slot="body" slot-scope="scope">
+                                        <div class="item">
+                                            <input type="number" v-model="scope.row.returncount" :max="scope.row.count">
+                                        </div>
+                                    </template>
+                                </GridColumn>
+                            </DataGrid>
+                        </LayoutPanel>
+                    </Layout>
+                </div>
+                <div class="dialog-button text-center">
+                    <LinkButton style="width:80px" @click="submitReturnorder">提交</LinkButton>
+                    <LinkButton style="width:80px" @click="$refs.editRetureOrderDlg.close()">关闭</LinkButton>
+                </div>
+            </Dialog>
+
+            <Dialog ref="viewRetusnorderDlg" closed
+                    :title="'退料单'"
+                    :dialogStyle="{width:'60vw',height:'60vh'}"
+                    bodyCls="f-column"
+                    :modal="true">
+                <div class="f-full">
+                    <Layout bodyCls="f-column" :border="false">
+                        <LayoutPanel region="north" :border="false">
+                            <table border="1" class="w-100">
+                                <tbody>
+                                <tr>
+                                    <td class="text-right">单据号</td>
+                                    <td class="text-left">{{ returnorderObj.number }}</td>
+                                    <td class="text-right">申请人</td>
+                                    <td class="text-left">{{ returnorderObj.applicantname }}</td>
+                                    <td class="text-right">申请时间</td>
+                                    <td class="text-left">{{ returnorderObj.applicationtime }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </LayoutPanel>
+                        <LayoutPanel region="center" style="height:100%" :border="false">
+                            <div style="position: absolute;top:10px;right:10px;z-index: 10000000" v-if="returnorderObj.instock">
+                                <img src="../../assets/images/ruku.png" style="height:50px">
+                            </div>
+                            <DataGrid v-if="returnorderObj.children"
+                                      :data="returnorderObj.children" class="f-full" :border="false">
+                                <GridColumn title="序号" width="40" align="center">
+                                    <template slot="body" slot-scope="scope">
+                                        <div class="item">
+                                            {{ scope.rowIndex + 1 }}
+                                        </div>
+                                    </template>
+                                </GridColumn>
+                                <GridColumn field="number" title="商品编号" align="center"></GridColumn>
+                                <GridColumn field="name" title="商品名称" align="center"></GridColumn>
+                                <GridColumn field="norm" title="商品规格" align="center"></GridColumn>
+                                <GridColumn field="model" title="商品型号" align="center"></GridColumn>
+                                <GridColumn field="count" title="退料数量" align="center">
+                                    <template slot="body" slot-scope="scope">
+                                        <div class="item">
+                                            {{ scope.row.count }} {{ scope.row.unit }}
+                                        </div>
+                                    </template>
+                                </GridColumn>
+                                <GridColumn field="price" title="退料单价" align="right" :editable="true">
+                                    <template slot="body" slot-scope="scope">
+                                        <div class="item">
+                                            {{ toMoney(scope.row.price, '￥') }}
+                                        </div>
+                                    </template>
+                                </GridColumn>
+                                <GridColumn field="warehousename" title="入货仓库" align="center"></GridColumn>
+                                <GridColumn field="cargolocationnumber" title="入货货位" align="center"></GridColumn>
+                            </DataGrid>
+                        </LayoutPanel>
+                    </Layout>
+                </div>
+                <div class="dialog-button text-center">
+                    <LinkButton style="width:80px" v-if="!returnorderObj.instock" @click="removeReturnorderObj">删除</LinkButton>
+                    <LinkButton style="width:80px" @click="$refs.viewRetusnorderDlg.close()">关闭</LinkButton>
+                </div>
+            </Dialog>
             <selectCommodity ref="selectCommodityCom" @selectCommodity="selectCommodity"></selectCommodity>
         </LayoutPanel>
     </Layout>
@@ -368,7 +499,12 @@ export default {
             pickinglistObj: {},
             worksequenceObj: {},
             transferObj: {},
-            pickinglist: []
+            pickinglist: [],
+            returnorderObj: {
+                children: []
+            },
+            pickinglistchildList: [],
+            returnorderList:[]
         }
     },
     created: function () {
@@ -416,6 +552,7 @@ export default {
             this.obj = this.clone(obj);
             this.loadWorksequence();
             this.loadPickingList();
+            this.loadReturnorderList();
         },
         changeStatus(status) {
             this.obj = {};
@@ -494,17 +631,17 @@ export default {
                 }, function (data) {
                     vm.msg('操作成功');
                     vm.$refs.editPickinglistDlg.close();
-                    vm.pickinglistObj={};
+                    vm.pickinglistObj = {};
                     vm.loadPickingList();
                 })
             })
         },
-        removePickinglist(){
+        removePickinglist() {
             let vm = this;
             this.confirm('确认吗?', function () {
-                vm.getData("pickinglist/delete", {id:vm.pickinglistObj.id}, function (data) {
+                vm.getData("pickinglist/delete", {id: vm.pickinglistObj.id}, function (data) {
                     vm.$refs.viewPickinglistDlg.close();
-                    vm.pickinglistObj={};
+                    vm.pickinglistObj = {};
                     vm.loadPickingList();
                 })
             })
@@ -543,15 +680,77 @@ export default {
                 })
             })
         },
-        selectPickinglistObj(obj){
-            this.pickinglistObj=obj;
+        selectPickinglistObj(obj) {
+            this.pickinglistObj = obj;
             console.log(obj);
         },
-        viewPickinglist(){
+        viewPickinglist() {
             let vm = this;
-            this.getData("pickinglist/getMapByPlanid", {id:this.pickinglistObj.id}, function (data) {
-                vm.pickinglistObj=data;
+            this.getData("pickinglist/getMapByPlanid", {id: this.pickinglistObj.id}, function (data) {
+                vm.pickinglistObj = data;
                 vm.$refs.viewPickinglistDlg.open();
+            })
+        },
+        editReturnorder() {
+            let vm = this;
+            this.getData("pickinglist/getChildByPids", {planid: this.obj.id}, function (data) {
+                vm.pickinglistchildList = data;
+                vm.$refs.editRetureOrderDlg.open();
+            })
+        },
+        submitReturnorder() {
+            let vm = this;
+            let commodity = [];
+            let err='';
+            this.pickinglistchildList.forEach(function (e) {
+                if(!isNaN(e.returncount) && parseFloat(e.returncount)>e.count){
+                    err='退货数量不可大于领料数量';
+                }
+                commodity.push({
+                    commodityid: e.id,
+                    returncount: e.returncount,
+                    returnprice: e.price
+                });
+            })
+            if(err){
+                this.alert(err);
+            }else{
+                this.confirm('确认吗?', function () {
+                    vm.getData("returnorder/save", {
+                        planid: vm.obj.id,
+                        rows: JSON.stringify(commodity)
+                    }, function (data) {
+                        vm.pickinglistchildList = [];
+                        vm.$refs.editRetureOrderDlg.close();
+                        vm.loadReturnorderList();
+                    })
+                })
+            }
+        },
+        loadReturnorderList(){
+            let vm = this;
+            this.getData("returnorder/getMaps", {planid:this.obj.id}, function (data) {
+                vm.returnorderList=data;
+            })
+        },
+        selectReturnorderObj(obj){
+            this.returnorderObj=obj;
+        },
+        viewReturnorder(){
+            let vm = this;
+            this.getData("returnorder/getMap", {id:this.returnorderObj.id}, function (data) {
+                vm.returnorderObj=data;
+                vm.$refs.viewRetusnorderDlg.open();
+            })
+        },
+        removeReturnorderObj(){
+            let vm = this;
+            this.confirm('确认吗?', function () {
+                vm.getData("returnorder/delete", {id: vm.returnorderObj.id}, function (data) {
+                    vm.returnorderObj= {};
+                    vm.$refs.viewRetusnorderDlg.close();
+                    vm.loadReturnorderList();
+                })
             })
         }
     }
